@@ -1,0 +1,2572 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#263d37" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FIISTUDIO" />
+  <title>FIISTUDIO | FIIS - UNI</title>
+  <style>
+    :root {
+      --bg: #e9f0ed;
+      --surface: #fbfdfc;
+      --surface-alt: #dfeae5;
+      --surface-hover: #d2e0da;
+      --border: #c4d5ce;
+      --text: #1f2d29;
+      --text-muted: #526862;
+      --primary: #3b7a6b;
+      --primary-hover: #2f6457;
+      --primary-soft: #d7ebe5;
+      --primary-text: #235247;
+      --secondary-soft: #e3e9f4;
+      --secondary-text: #3d547a;
+      --navbar-bg: #263d37;
+      --navbar-text: #eef5f2;
+      --domina-bg: #d6ede4;
+      --domina-border: #8ec2ae;
+      --domina-text: #1f5443;
+      --ayuda-bg: #f5ebd6;
+      --ayuda-border: #d4bc8c;
+      --ayuda-text: #6e4e1e;
+      --wa-bg: #dcf8e6;
+      --wa-border: #7fd19e;
+      --wa-text: #165b33;
+      --error-bg: #f8e2e2;
+      --error-border: #d99b9e;
+      --error-text: #8c2d32;
+      --shadow: 0 12px 30px rgba(31, 45, 41, 0.09);
+      --auth-bg: linear-gradient(135deg, #dce8e3 0%, #dfe6f0 100%);
+    }
+
+    [data-theme="dark"] {
+      --bg: #141b19;
+      --surface: #1c2522;
+      --surface-alt: #24302c;
+      --surface-hover: #2d3b36;
+      --border: #33433e;
+      --text: #e2ece8;
+      --text-muted: #93a8a1;
+      --primary: #67b09e;
+      --primary-hover: #569c8b;
+      --primary-soft: #213832;
+      --primary-text: #9ad4c5;
+      --secondary-soft: #232c3b;
+      --secondary-text: #9eb6de;
+      --navbar-bg: #101614;
+      --navbar-text: #e2ece8;
+      --domina-bg: #1e3830;
+      --domina-border: #386355;
+      --domina-text: #96d4be;
+      --ayuda-bg: #382f1f;
+      --ayuda-border: #635336;
+      --ayuda-text: #e3c38a;
+      --wa-bg: #193826;
+      --wa-border: #2f6b47;
+      --wa-text: #8ce0ad;
+      --error-bg: #3d2022;
+      --error-border: #7a3b40;
+      --error-text: #f0a1a6;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+      --auth-bg: linear-gradient(135deg, #131a18 0%, #182026 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 6.5rem; transition: background 0.25s, color 0.25s; }
+    .hidden { display: none !important; }
+
+    /* BOTÓN CIRCULAR LUNA / SOL */
+    .moon-btn {
+      width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--primary); display: inline-flex;
+      align-items: center; justify-content: center; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); transition: transform 0.2s, background 0.2s;
+    }
+    .moon-btn:hover { transform: scale(1.06); background: var(--surface-alt); }
+    .moon-btn svg { width: 20px; height: 20px; fill: currentColor; }
+    .floating-theme { position: fixed; top: 1.2rem; right: 1.2rem; z-index: 40; }
+    .navbar .moon-btn {
+      width: 38px; height: 38px; background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.22); color: #f4e8b8; box-shadow: none;
+    }
+
+    /* LOGIN / REGISTRO */
+    .auth-wrap {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem; background: var(--auth-bg); margin-bottom: -6.5rem;
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); width: 100%;
+      max-width: 450px; border-radius: 20px; padding: 2rem; box-shadow: var(--shadow);
+    }
+    .header { text-align: center; margin-bottom: 1.35rem; }
+    .badge {
+      display: inline-block; background: var(--secondary-soft); color: var(--secondary-text);
+      font-weight: 700; font-size: 0.77rem; padding: 0.3rem 0.85rem; border-radius: 999px; margin-bottom: 0.55rem;
+    }
+    .header h1 { font-size: 1.65rem; margin-bottom: 0.3rem; }
+    .header p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.4; }
+
+    .mode-radio { display: none; }
+    .tabs {
+      display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-alt);
+      padding: 0.3rem; border-radius: 11px; margin-bottom: 1.2rem; border: 1px solid var(--border);
+    }
+    .tab-label {
+      text-align: center; padding: 0.58rem; font-weight: 600; font-size: 0.9rem;
+      color: var(--text-muted); border-radius: 8px; cursor: pointer; user-select: none;
+    }
+    #mode-login:checked ~ .tabs label[for="mode-login"],
+    #mode-register:checked ~ .tabs label[for="mode-register"] {
+      background: var(--surface); color: var(--primary); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+    #mode-login:checked ~ #auth-form #reg-fields { display: none; }
+    #mode-register:checked ~ #auth-form #reg-fields { display: block; }
+
+    .group { margin-bottom: 0.9rem; }
+    .group label { display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .group input, .group select {
+      width: 100%; padding: 0.68rem 0.85rem; border: 1.5px solid var(--border);
+      border-radius: 9px; font-size: 0.93rem; background: var(--bg); color: var(--text);
+    }
+    .group input:focus, .group select:focus { outline: none; border-color: var(--primary); background: var(--surface); }
+    .field-hint { display: block; font-size: 0.76rem; color: var(--text-muted); margin-top: 0.28rem; }
+    .row-2 { display: grid; grid-template-columns: 1.45fr 1fr; gap: 0.7rem; }
+
+    .btn-main {
+      width: 100%; background: var(--primary); color: #fff; border: none; padding: 0.84rem;
+      border-radius: 9px; font-size: 0.96rem; font-weight: 600; cursor: pointer; margin-top: 0.35rem;
+    }
+    .btn-main:hover { background: var(--primary-hover); }
+    .btn-main:disabled { opacity: 0.65; cursor: wait; }
+    .btn-demo {
+      width: 100%; background: var(--secondary-soft); color: var(--secondary-text);
+      border: 1px solid var(--border); padding: 0.72rem; border-radius: 9px;
+      font-size: 0.88rem; font-weight: 600; cursor: pointer; margin-top: 0.65rem;
+    }
+
+    .error-box {
+      background: var(--error-bg); color: var(--error-text); border: 1.5px solid var(--error-border);
+      padding: 0.72rem 0.9rem; border-radius: 9px; font-size: 0.85rem; font-weight: 600;
+      margin-bottom: 0.95rem; display: none;
+    }
+
+    /* NAVBAR SUPERIOR */
+    .navbar {
+      background: var(--navbar-bg); color: var(--navbar-text); padding: 0.85rem 1.75rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;
+    }
+    .nav-left { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+    .logo-tag { background: var(--primary); color: #fff; padding: 0.3rem 0.68rem; border-radius: 7px; font-weight: 700; font-size: 0.82rem; }
+    .online-pill {
+      display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 700;
+      padding: 0.22rem 0.6rem; border-radius: 999px; background: rgba(103, 176, 158, 0.2); color: #9ad4c5;
+    }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; }
+
+    .nav-right { display: flex; align-items: center; gap: 0.6rem; font-size: 0.86rem; flex-wrap: wrap; }
+    .user-meta { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; }
+    .user-sub-tags { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    .user-wa-tag { font-size: 0.74rem; color: #9ad4c5; cursor: pointer; text-decoration: underline dotted; }
+    .user-sched-nav {
+      font-size: 0.72rem; font-weight: 700; padding: 0.08rem 0.45rem; border-radius: 999px;
+      background: rgba(154, 212, 197, 0.18); color: #c7eee4; cursor: pointer;
+    }
+    .btn-profile {
+      background: rgba(103, 176, 158, 0.24); color: #e6f7f2;
+      border: 1px solid rgba(154, 212, 197, 0.42); padding: 0.44rem 0.85rem;
+      border-radius: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 0.35rem; transition: background 0.18s;
+    }
+    .btn-profile:hover { background: rgba(103, 176, 158, 0.38); }
+    .btn-shortcut {
+      background: rgba(255, 255, 255, 0.12); color: #eef5f2;
+      border: 1px solid rgba(255, 255, 255, 0.26); padding: 0.44rem 0.82rem;
+      border-radius: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 0.35rem; transition: background 0.18s;
+    }
+    .btn-shortcut:hover { background: rgba(255, 255, 255, 0.22); }
+    .btn-out {
+      background: rgba(255, 255, 255, 0.1); color: var(--navbar-text);
+      border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.44rem 0.85rem; border-radius: 8px; cursor: pointer; font-size: 0.82rem;
+    }
+
+    /* PANEL PRINCIPAL */
+    .grid {
+      max-width: 1200px; margin: 1.75rem auto; padding: 0 1.25rem;
+      display: grid; grid-template-columns: 1fr 1.15fr; gap: 1.5rem; align-items: start;
+    }
+    @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--surface); border-radius: 16px; padding: 1.5rem;
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+    }
+    .panel-head { margin-bottom: 1.15rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); }
+    .panel-head h2 { font-size: 1.15rem; margin-bottom: 0.25rem; }
+    .panel-head p { font-size: 0.87rem; color: var(--text-muted); }
+
+    /* BUSCADOR DE CURSOS */
+    .course-search-wrap { position: relative; margin-bottom: 1.25rem; }
+    .cursos-label { display: block; font-size: 0.92rem; font-weight: 700; color: var(--primary-text); margin-bottom: 0.42rem; }
+    .search-input-box { position: relative; display: flex; align-items: center; }
+    .search-input-box input {
+      width: 100%; padding: 0.78rem 2.4rem 0.78rem 0.95rem; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 0.93rem; background: var(--bg); color: var(--text);
+    }
+    .search-input-box input:focus { outline: none; border-color: var(--primary); background: var(--surface); }
+    .clear-btn {
+      position: absolute; right: 0.65rem; background: var(--surface-alt); color: var(--text-muted);
+      border: 1px solid var(--border); width: 22px; height: 22px; border-radius: 50%; cursor: pointer; font-weight: 700;
+    }
+
+    .course-dropdown {
+      position: absolute; left: 0; right: 0; top: calc(100% + 6px);
+      background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px;
+      box-shadow: var(--shadow); max-height: 330px; overflow-y: auto; z-index: 30; padding: 0.45rem;
+    }
+    .course-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.65rem 0.75rem; border-radius: 8px; gap: 0.65rem; border-bottom: 1px solid var(--border);
+    }
+    .course-row:last-child { border-bottom: none; }
+    .course-row:hover { background: var(--surface-alt); }
+    .course-row strong { display: block; font-size: 0.89rem; }
+    .course-row span { font-size: 0.76rem; color: var(--text-muted); }
+    .btns { display: flex; gap: 0.38rem; flex-shrink: 0; }
+
+    .chip {
+      border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted);
+      padding: 0.36rem 0.62rem; border-radius: 7px; font-size: 0.77rem; font-weight: 600; cursor: pointer;
+    }
+    .chip.domina.active { background: var(--domina-bg); border-color: var(--domina-border); color: var(--domina-text); }
+    .chip.ayuda.active { background: var(--ayuda-bg); border-color: var(--ayuda-border); color: var(--ayuda-text); }
+
+    .selected-section { display: flex; flex-direction: column; gap: 0.9rem; }
+    .selected-box { background: var(--bg); border: 1px solid var(--border); border-radius: 11px; padding: 0.9rem; }
+    .selected-box h3 { font-size: 0.85rem; margin-bottom: 0.55rem; color: var(--text-muted); }
+    .selected-chips { display: flex; flex-wrap: wrap; gap: 0.42rem; }
+    .sel-tag {
+      display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.32rem 0.62rem;
+      border-radius: 7px; font-size: 0.8rem; font-weight: 600; border: 1px solid transparent;
+    }
+    .sel-tag.domina { background: var(--domina-bg); color: var(--domina-text); border-color: var(--domina-border); }
+    .sel-tag.ayuda { background: var(--ayuda-bg); color: var(--ayuda-text); border-color: var(--ayuda-border); }
+    .sel-tag button { background: none; border: none; color: inherit; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+    .none-text { font-size: 0.81rem; color: var(--text-muted); }
+
+    /* MATCHES */
+    .filters { display: flex; gap: 0.5rem; margin-bottom: 1.15rem; flex-wrap: wrap; }
+    .pill {
+      border: 1px solid var(--border); background: var(--surface-alt); color: var(--text-muted);
+      padding: 0.4rem 0.9rem; border-radius: 999px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    }
+    .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .matches { display: flex; flex-direction: column; gap: 0.95rem; }
+    .match-card { border: 1.5px solid var(--border); background: var(--surface); border-radius: 13px; padding: 1.15rem; }
+    .match-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.85rem; }
+    .match-peer-info { display: flex; align-items: flex-start; gap: 0.75rem; min-width: 0; }
+    .match-avatar {
+      width: 42px; height: 42px; border-radius: 50%; background: var(--primary-soft);
+      color: var(--primary-text); border: 1.5px solid var(--domina-border);
+      font-weight: 700; font-size: 0.92rem; letter-spacing: 0.03em;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .match-name-row { display: flex; align-items: center; gap: 0.42rem; flex-wrap: wrap; margin-bottom: 0.15rem; }
+    .match-top h3 { font-size: 1.03rem; margin: 0; }
+    .match-top span.peer-sub { font-size: 0.82rem; color: var(--text-muted); display: block; }
+    .wa-mini-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.32rem;
+      background: var(--wa-bg); color: var(--wa-text); border: 1px solid var(--wa-border);
+      font-size: 0.74rem; font-weight: 600; padding: 0.18rem 0.55rem; border-radius: 6px;
+    }
+    .score-pill {
+      display: inline-block; padding: 0.32rem 0.75rem; border-radius: 999px; font-weight: 700;
+      font-size: 0.85rem; background: var(--primary-soft); color: var(--primary-text); border: 1px solid var(--domina-border);
+    }
+    .mutual { display: block; font-size: 0.74rem; font-weight: 700; color: var(--secondary-text); margin-top: 0.28rem; text-align: right; }
+
+    .details {
+      display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.85rem;
+      background: var(--bg); border: 1px solid var(--border); padding: 0.85rem; border-radius: 9px; margin-bottom: 0.9rem;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.28rem; }
+    .tag { padding: 0.22rem 0.58rem; border-radius: 6px; font-size: 0.77rem; font-weight: 600; border: 1px solid transparent; }
+    .tag.teach { background: var(--domina-bg); color: var(--domina-text); border-color: var(--domina-border); }
+    .tag.learn { background: var(--ayuda-bg); color: var(--ayuda-text); border-color: var(--ayuda-border); }
+
+    .card-actions { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+    .btn-connect {
+      background: var(--primary); color: #fff; border: none; padding: 0.58rem 1rem;
+      border-radius: 8px; font-size: 0.84rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-connect:hover { background: var(--primary-hover); }
+    .btn-danger {
+      background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border);
+      padding: 0.55rem 0.95rem; border-radius: 8px; font-size: 0.84rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-danger:hover { filter: brightness(0.95); }
+    .btn-wa-direct {
+      background: var(--wa-bg); color: var(--wa-text); border: 1px solid var(--wa-border);
+      padding: 0.55rem 0.9rem; border-radius: 8px; font-size: 0.83rem; font-weight: 600;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer;
+    }
+    .btn-wa-direct:hover { filter: brightness(0.96); }
+    .empty { text-align: center; padding: 2.2rem 1rem; color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; }
+
+    /* CONTENEDOR FLOTANTE DERECHO: CAMPANA DE NO LEÍDOS + BOTÓN DE CHAT */
+    .floating-chat-dock {
+      position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 45;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 0.6rem;
+    }
+
+    .unread-bell-btn {
+      width: 62px; padding: 0.5rem 0.35rem 0.44rem; border-radius: 14px;
+      background: var(--surface); color: var(--text-muted);
+      border: 1.5px solid var(--border); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.22rem; cursor: pointer; transition: transform 0.18s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .unread-bell-btn:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .unread-bell-btn svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.2s; }
+    .unread-bell-num {
+      font-size: 0.78rem; font-weight: 800; line-height: 1;
+      padding: 0.14rem 0.48rem; border-radius: 999px;
+      background: var(--surface-alt); color: var(--text-muted);
+      min-width: 22px; text-align: center;
+    }
+
+    .unread-bell-btn.has-unread {
+      border-color: #eab308;
+      background: linear-gradient(180deg, var(--surface) 0%, #fef9c3 100%);
+      color: #b45309;
+    }
+    [data-theme="dark"] .unread-bell-btn.has-unread {
+      border-color: #facc15;
+      background: linear-gradient(180deg, var(--surface) 0%, #3a3014 100%);
+      color: #fde047;
+    }
+    .unread-bell-btn.has-unread .unread-bell-num {
+      background: #eab308; color: #1c1917;
+    }
+
+    @keyframes bellGlowPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.9), 0 0 22px rgba(250, 204, 21, 0.85);
+        border-color: #facc15;
+        transform: scale(1.06);
+      }
+      25% {
+        box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.35), 0 0 32px rgba(250, 204, 21, 0.95);
+        transform: scale(1.1);
+      }
+      55% {
+        box-shadow: 0 0 0 16px rgba(250, 204, 21, 0), 0 0 24px rgba(250, 204, 21, 0.7);
+        transform: scale(1.05);
+      }
+      100% {
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes bellSwing {
+      0%, 100% { transform: rotate(0deg); }
+      15% { transform: rotate(18deg); }
+      30% { transform: rotate(-16deg); }
+      45% { transform: rotate(12deg); }
+      60% { transform: rotate(-10deg); }
+      75% { transform: rotate(5deg); }
+    }
+
+    .unread-bell-btn.bell-shine {
+      animation: bellGlowPulse 1.15s ease-out 2;
+    }
+    .unread-bell-btn.bell-shine svg {
+      animation: bellSwing 0.9s ease-in-out 2;
+      transform-origin: top center;
+    }
+
+    /* RECTÁNGULO DE CHAT A LA DERECHA */
+    .chat-launcher-rect {
+      width: 215px; height: 54px; border-radius: 13px;
+      background: var(--navbar-bg); color: var(--navbar-text);
+      border: 1.5px solid var(--primary); box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.05rem; cursor: pointer; font-weight: 700; font-size: 0.96rem;
+      transition: transform 0.18s, background 0.18s;
+    }
+    .chat-launcher-rect:hover { transform: translateY(-2px); background: var(--primary-hover); color: #fff; }
+    .chat-launcher-left { display: flex; align-items: center; gap: 0.55rem; }
+    .chat-launcher-left svg { width: 20px; height: 20px; fill: currentColor; }
+    .chat-launcher-badge {
+      background: var(--primary); color: #fff; font-size: 0.78rem; font-weight: 800;
+      padding: 0.16rem 0.58rem; border-radius: 999px;
+    }
+    .chat-launcher-rect:hover .chat-launcher-badge { background: rgba(0, 0, 0, 0.25); }
+
+    /* VENTANA DESPLEGABLE DE CHATS A LA DERECHA */
+    .chat-drawer {
+      position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 46;
+      width: 700px; max-width: calc(100vw - 2rem);
+      height: 520px; max-height: calc(100vh - 5rem);
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 16px; box-shadow: 0 18px 42px rgba(0, 0, 0, 0.26);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .chat-drawer-topbar {
+      background: var(--navbar-bg); color: var(--navbar-text);
+      padding: 0.72rem 1rem; display: flex; justify-content: space-between; align-items: center;
+    }
+    .chat-drawer-topbar strong { font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; }
+    .btn-minimize-chat {
+      background: rgba(255, 255, 255, 0.12); color: var(--navbar-text);
+      border: 1px solid rgba(255, 255, 255, 0.22); padding: 0.3rem 0.72rem;
+      border-radius: 7px; font-size: 0.79rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-minimize-chat:hover { background: rgba(255, 255, 255, 0.22); }
+
+    .chat-layout {
+      display: grid; grid-template-columns: 245px 1fr; flex: 1; min-height: 0; overflow: hidden;
+    }
+    @media (max-width: 680px) {
+      .chat-drawer { right: 0.75rem; bottom: 0.75rem; max-width: calc(100vw - 1.5rem); height: 550px; }
+      .chat-layout { grid-template-columns: 1fr; }
+      .chat-sidebar { max-height: 150px; border-right: none; border-bottom: 1px solid var(--border); }
+    }
+
+    .chat-sidebar {
+      border-right: 1px solid var(--border); background: var(--bg);
+      display: flex; flex-direction: column; min-height: 0;
+    }
+    .chat-sidebar-head {
+      padding: 0.72rem 0.85rem; border-bottom: 1px solid var(--border); background: var(--surface);
+    }
+    .chat-sidebar-head h2 { font-size: 0.88rem; color: var(--text-muted); }
+    .chat-list { overflow-y: auto; flex: 1; padding: 0.45rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .chat-item {
+      display: flex; align-items: center; gap: 0.6rem; padding: 0.62rem 0.68rem;
+      border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: background 0.15s;
+    }
+    .chat-item:hover { background: var(--surface-alt); }
+    .chat-item.active { background: var(--surface); border-color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .avatar-circle {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--primary-soft);
+      color: var(--primary-text); font-weight: 700; font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .chat-item-info { min-width: 0; flex: 1; }
+    .chat-item-top { display: flex; justify-content: space-between; align-items: center; gap: 0.3rem; }
+    .chat-item-top strong { font-size: 0.83rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-item-sub-row { display: flex; justify-content: space-between; align-items: center; gap: 0.35rem; margin-top: 0.14rem; }
+    .chat-item-sub { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .peer-unread-pill {
+      background: #eab308; color: #1c1917; font-size: 0.67rem; font-weight: 800;
+      padding: 0.08rem 0.42rem; border-radius: 999px; flex-shrink: 0;
+    }
+
+    /* ETIQUETA DE HORARIO DISPONIBLE */
+    .chat-sched-badge {
+      display: inline-flex; align-items: center; gap: 0.2rem;
+      padding: 0.12rem 0.46rem; border-radius: 999px;
+      font-size: 0.67rem; font-weight: 700; line-height: 1.2;
+      background: var(--secondary-soft); color: var(--secondary-text);
+      border: 1px solid var(--border); flex-shrink: 0; vertical-align: middle;
+    }
+
+    /* ÁREA DE CONVERSACIÓN + MENÚ DESPLEGABLE */
+    .chat-main { display: flex; flex-direction: column; background: var(--surface); position: relative; min-height: 0; }
+    .chat-header {
+      padding: 0.72rem 0.95rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;
+    }
+    .chat-peer-title { min-width: 0; }
+    .chat-peer-title h3 {
+      font-size: 0.92rem; display: flex; align-items: center; gap: 0.38rem;
+      flex-wrap: wrap;
+    }
+    .chat-peer-title span.sub-line { font-size: 0.74rem; color: var(--text-muted); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .chat-menu-wrap { position: relative; display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+    .btn-chat-menu {
+      background: var(--surface-alt); color: var(--text); border: 1px solid var(--border);
+      padding: 0.38rem 0.65rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-chat-menu:hover { background: var(--surface-hover); }
+    .chat-dropdown-menu {
+      position: absolute; right: 0; top: calc(100% + 6px); width: 175px;
+      background: var(--surface); border: 1.5px solid var(--border); border-radius: 11px;
+      box-shadow: var(--shadow); z-index: 50; padding: 0.35rem;
+    }
+    .menu-opt {
+      width: 100%; text-align: left; background: transparent; border: none; color: var(--text);
+      padding: 0.52rem 0.68rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; display: block;
+    }
+    .menu-opt:hover { background: var(--surface-alt); }
+    .menu-opt.danger-opt { color: var(--error-text); }
+
+    .chat-messages {
+      flex: 1; padding: 0.9rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem;
+      background: var(--bg); min-height: 0;
+    }
+    .msg-bubble {
+      max-width: 82%; padding: 0.58rem 0.82rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.4;
+      word-wrap: break-word; position: relative;
+    }
+    .msg-bubble.sent {
+      align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px;
+    }
+    .msg-bubble.received {
+      align-self: flex-start; background: var(--surface); color: var(--text);
+      border: 1px solid var(--border); border-bottom-left-radius: 4px;
+    }
+    .chat-msg-img {
+      max-width: 100%; max-height: 220px; border-radius: 8px; display: block;
+      cursor: zoom-in; object-fit: contain; background: rgba(0, 0, 0, 0.06);
+    }
+    .msg-caption { margin-top: 0.42rem; }
+    .msg-footer {
+      display: flex; align-items: center; justify-content: flex-end; gap: 0.4rem;
+      margin-top: 0.28rem; font-size: 0.67rem; opacity: 0.85;
+    }
+    .msg-actions { display: inline-flex; gap: 0.25rem; }
+    .msg-act-btn {
+      background: rgba(255, 255, 255, 0.16); color: inherit; border: none;
+      padding: 0.12rem 0.38rem; border-radius: 5px; font-size: 0.66rem; font-weight: 600;
+      cursor: pointer;
+    }
+    .msg-act-btn:hover { background: rgba(255, 255, 255, 0.3); }
+    .msg-act-btn.del:hover { background: #b83238; color: #fff; }
+
+    .msg-edit-wrap { display: flex; flex-direction: column; gap: 0.4rem; min-width: 195px; }
+    .msg-edit-input {
+      width: 100%; padding: 0.4rem 0.6rem; border-radius: 7px; border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(0, 0, 0, 0.18); color: #fff; font-size: 0.84rem;
+    }
+    .msg-edit-input:focus { outline: none; border-color: #fff; }
+    .msg-edit-btns { display: flex; justify-content: flex-end; gap: 0.3rem; }
+
+    .chat-quick-bar {
+      padding: 0.45rem 0.85rem; border-top: 1px solid var(--border); background: var(--surface);
+      display: flex; gap: 0.4rem; align-items: center;
+    }
+    .quick-chip {
+      background: var(--surface-alt); color: var(--text); border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.77rem; font-weight: 600; cursor: pointer;
+    }
+    .quick-chip:hover { border-color: var(--primary); color: var(--primary-text); background: var(--primary-soft); }
+
+    /* VISTA PREVIA DE IMAGEN ADJUNTA ANTES DE ENVIAR */
+    .chat-img-preview-bar {
+      padding: 0.48rem 0.85rem; border-top: 1px solid var(--border); background: var(--surface-alt);
+      display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+    }
+    .chat-img-preview-left { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+    .chat-img-preview-thumb {
+      width: 44px; height: 44px; border-radius: 8px; object-fit: cover;
+      border: 1.5px solid var(--primary); background: var(--surface); flex-shrink: 0;
+    }
+    .chat-img-preview-text { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+    .chat-img-preview-text span { display: block; font-size: 0.7rem; font-weight: 400; color: var(--text-muted); }
+    .btn-remove-preview {
+      background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border);
+      width: 26px; height: 26px; border-radius: 50%; font-weight: 700; cursor: pointer; flex-shrink: 0;
+    }
+
+    .chat-input-bar {
+      padding: 0.65rem 0.85rem; border-top: 1px solid var(--border); background: var(--surface);
+      display: flex; gap: 0.45rem; align-items: center;
+    }
+    .btn-attach-img {
+      background: var(--surface-alt); color: var(--text); border: 1.5px solid var(--border);
+      width: 38px; height: 38px; border-radius: 9px; font-size: 1.05rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-attach-img:hover { background: var(--primary-soft); border-color: var(--primary); }
+    .chat-input-bar input[type="text"] {
+      flex: 1; padding: 0.58rem 0.8rem; border: 1.5px solid var(--border); border-radius: 9px;
+      background: var(--bg); color: var(--text); font-size: 0.86rem; min-width: 0;
+    }
+    .chat-input-bar input[type="text"]:focus { outline: none; border-color: var(--primary); background: var(--surface); }
+
+    .chat-empty-state {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 1.4rem; color: var(--text-muted); gap: 0.65rem; font-size: 0.85rem;
+    }
+
+    /* MODALES */
+    .modal {
+      position: fixed; inset: 0; background: rgba(15, 22, 20, 0.65);
+      display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 60;
+    }
+    .modal-box {
+      background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      max-width: 430px; width: 100%; border-radius: 15px; padding: 1.5rem; box-shadow: var(--shadow);
+    }
+    .modal-box h3 { margin-bottom: 0.45rem; }
+    .modal-box p { font-size: 0.86rem; color: var(--text-muted); margin-bottom: 0.9rem; line-height: 1.45; }
+    .modal-btns { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1rem; }
+    .btn-sec {
+      background: var(--surface-alt); color: var(--text); border: 1px solid var(--border);
+      padding: 0.55rem 0.95rem; border-radius: 8px; font-weight: 600; cursor: pointer;
+    }
+
+    /* MODAL DE PERFIL Y HORARIOS */
+    .profile-summary-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.75rem 0.9rem; margin-bottom: 1rem; font-size: 0.83rem;
+    }
+    .profile-summary-card strong { display: block; font-size: 0.95rem; margin-bottom: 0.15rem; }
+    .profile-summary-card span { color: var(--text-muted); }
+
+    .schedule-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; margin-top: 0.4rem;
+    }
+    .schedule-opt {
+      background: var(--bg); border: 1.5px solid var(--border); border-radius: 11px;
+      padding: 0.75rem 0.5rem; text-align: center; cursor: pointer;
+      color: var(--text); transition: all 0.15s; display: flex; flex-direction: column;
+      align-items: center; gap: 0.25rem;
+    }
+    .schedule-opt:hover { background: var(--surface-alt); border-color: var(--primary); }
+    .schedule-opt.active {
+      background: var(--primary-soft); border-color: var(--primary);
+      color: var(--primary-text); box-shadow: 0 3px 10px rgba(59, 122, 107, 0.16);
+    }
+    .schedule-opt .sched-icon { font-size: 1.25rem; }
+    .schedule-opt .sched-title { font-size: 0.86rem; font-weight: 700; }
+    .schedule-opt .sched-sub { font-size: 0.69rem; color: var(--text-muted); }
+    .schedule-opt.active .sched-sub { color: var(--primary-text); opacity: 0.85; }
+
+    /* GUÍA ACCESO DIRECTO MÓVIL */
+    .shortcut-steps {
+      display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 0.85rem;
+    }
+    .shortcut-step-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.75rem 0.85rem; font-size: 0.82rem; line-height: 1.42;
+    }
+    .shortcut-step-card strong { display: block; color: var(--primary-text); margin-bottom: 0.2rem; }
+    .copy-feedback { font-size: 0.78rem; font-weight: 600; color: var(--primary-text); margin-top: 0.35rem; }
+
+    /* VISOR DE IMAGEN AMPLIADA */
+    .lightbox-box {
+      position: relative; max-width: 92vw; max-height: 90vh;
+      display: flex; flex-direction: column; align-items: center; gap: 0.7rem;
+    }
+    .lightbox-box img {
+      max-width: 90vw; max-height: 80vh; border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55); background: var(--surface);
+    }
+  </style>
+</head>
+<body>
+
+  <button type="button" class="moon-btn floating-theme" id="theme-btn-auth" onclick="toggleTheme()" title="Cambiar tema"></button>
+
+  <!-- VISTA 1: LOGIN / REGISTRO -->
+  <section id="auth-view" class="auth-wrap">
+    <div class="card">
+      <div class="header">
+        <span class="badge">FIIS • UNI</span>
+        <h1>FIISTUDIO</h1>
+        <p>Conecta en vivo con compañeros según los cursos que dominas o necesitas reforzar</p>
+      </div>
+
+      <input type="radio" name="authMode" id="mode-login" class="mode-radio" checked onchange="hideErr()" />
+      <input type="radio" name="authMode" id="mode-register" class="mode-radio" onchange="hideErr()" />
+
+      <div class="tabs">
+        <label for="mode-login" class="tab-label">Iniciar sesión</label>
+        <label for="mode-register" class="tab-label">Crear cuenta</label>
+      </div>
+
+      <div id="error-box" class="error-box"></div>
+
+      <div id="auth-form">
+        <div id="reg-fields">
+          <div class="group">
+            <label for="reg-name">Nombre y apellido</label>
+            <input type="text" id="reg-name" placeholder="Ej. Camila Torres" />
+          </div>
+          <div class="row-2">
+            <div class="group">
+              <label for="reg-major">Especialidad FIIS</label>
+              <select id="reg-major">
+                <option value="Ing. de Sistemas">Ing. de Sistemas</option>
+                <option value="Ing. Industrial">Ing. Industrial</option>
+                <option value="Ing. de Software">Ing. de Software</option>
+                <option value="Ing. en Inteligencia Artificial">Ing. en Inteligencia Artificial</option>
+              </select>
+            </div>
+            <div class="group">
+              <label for="reg-cycle">Ciclo</label>
+              <select id="reg-cycle">
+                <option value="1er ciclo">1er ciclo</option>
+                <option value="2do ciclo">2do ciclo</option>
+                <option value="3er ciclo">3er ciclo</option>
+                <option value="4to ciclo">4to ciclo</option>
+                <option value="5to+ ciclo">5to+ ciclo</option>
+              </select>
+            </div>
+          </div>
+          <div class="group">
+            <label for="reg-whatsapp">Número de WhatsApp (opcional)</label>
+            <input type="tel" id="reg-whatsapp" placeholder="Ej. 987654321 o +51 987654321" />
+            <span class="field-hint">Permite que tus matches te escriban directo por WhatsApp.</span>
+          </div>
+        </div>
+
+        <div class="group">
+          <label for="auth-email">Correo Gmail (o institucional UNI)</label>
+          <input type="email" id="auth-email" placeholder="tu.nombre@gmail.com" onkeydown="if(event.key==='Enter') submitAuth()" />
+          <span class="field-hint">Solo se admiten cuentas válidas @gmail.com o @uni.pe</span>
+        </div>
+
+        <div class="group">
+          <label for="auth-password">Contraseña</label>
+          <input type="password" id="auth-password" placeholder="Mínimo 6 caracteres" onkeydown="if(event.key==='Enter') submitAuth()" />
+        </div>
+
+        <button type="button" id="btn-auth-submit" class="btn-main" onclick="submitAuth()">Continuar al panel</button>
+      </div>
+
+      <button type="button" class="btn-demo" onclick="loginDemo()">Probar vista demo (sin conexión)</button>
+    </div>
+  </section>
+
+  <!-- VISTA 2: PANEL PRINCIPAL -->
+  <section id="app-view" class="hidden">
+    <nav class="navbar">
+      <div class="nav-left">
+        <span class="logo-tag">FIIS - UNI</span>
+        <strong>FIISTUDIO</strong>
+        <span id="mode-indicator" class="online-pill"><span class="online-dot"></span> Online en vivo</span>
+      </div>
+      <div class="nav-right">
+        <div class="user-meta">
+          <span id="user-display"></span>
+          <div class="user-sub-tags">
+            <span id="user-sched-display" class="user-sched-nav" onclick="openProfileModal()" title="Cambiar horario disponible"></span>
+            <span id="user-wa-display" class="user-wa-tag" onclick="openWaModal()" title="Haz clic para editar tu WhatsApp"></span>
+          </div>
+        </div>
+        <button type="button" class="btn-profile" onclick="openProfileModal()">👤 Perfil</button>
+        <button type="button" id="btn-install-shortcut" class="btn-shortcut" onclick="handleMobileShortcutClick()" title="Añadir acceso directo en celular">📲 Acceso directo</button>
+        <button type="button" class="moon-btn" id="theme-btn-nav" onclick="toggleTheme()" title="Cambiar tema"></button>
+        <button type="button" class="btn-out" onclick="logoutUser()">Cerrar sesión</button>
+      </div>
+    </nav>
+
+    <!-- CURSOS Y MATCH -->
+    <main id="explore-section" class="grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>1. Configura tus cursos FIIS</h2>
+          <p>Haz clic en el recuadro <strong>Cursos</strong> para buscar por código o nombre y marcar tu nivel.</p>
+        </div>
+
+        <div class="course-search-wrap" id="course-search-wrap">
+          <label for="course-search-input" class="cursos-label">Cursos</label>
+          <div class="search-input-box">
+            <input
+              type="text"
+              id="course-search-input"
+              placeholder="Haz clic y escribe código o nombre (ej. Intro, BMA01, Cálculo...)"
+              autocomplete="off"
+              onfocus="openCourseMenu()"
+              onclick="openCourseMenu()"
+              oninput="renderDropdownCourses()"
+            />
+            <button type="button" id="clear-search-btn" class="clear-btn hidden" onclick="clearCourseSearch()">×</button>
+          </div>
+          <div id="course-dropdown" class="course-dropdown hidden"></div>
+        </div>
+
+        <div class="selected-section">
+          <div class="selected-box">
+            <h3>Cursos que dominas</h3>
+            <div id="selected-domina" class="selected-chips"></div>
+          </div>
+          <div class="selected-box">
+            <h3>Cursos donde necesitas ayuda</h3>
+            <div id="selected-ayuda" class="selected-chips"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>2. Compañeros compatibles</h2>
+          <p>Conecta para abrir el chat en tiempo real o escribir por WhatsApp.</p>
+        </div>
+        <div class="filters">
+          <button type="button" class="pill active" onclick="setFilter('all', this)">Todos</button>
+          <button type="button" class="pill" onclick="setFilter('mutual', this)">Intercambio mutuo</button>
+          <button type="button" class="pill" onclick="setFilter('canHelpMe', this)">Me pueden ayudar</button>
+        </div>
+        <div id="matches-container" class="matches"></div>
+      </div>
+    </main>
+
+    <!-- DOCK DERECHO: CAMPANA DE NO LEÍDOS ENCIMA + BOTÓN DE CHAT ABAJO -->
+    <div id="floating-chat-dock" class="floating-chat-dock">
+      <button type="button" id="unread-bell-btn" class="unread-bell-btn" onclick="handleBellClick()" title="Mensajes sin leer">
+        <svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm6.36-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.86 1.86 0 1 0-3.72 0v.68C7.27 5.36 5.64 7.92 5.64 11v5L4 17.6v.9h16v-.9L18.36 16z"/></svg>
+        <span id="unread-count-num" class="unread-bell-num">0</span>
+      </button>
+
+      <button type="button" id="chat-launcher" class="chat-launcher-rect" onclick="openChatDrawer()">
+        <span class="chat-launcher-left">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+          <span>Chat</span>
+        </span>
+        <span id="chat-count-badge" class="chat-launcher-badge">0</span>
+      </button>
+    </div>
+
+    <!-- VENTANA FLOTANTE DE CHATS A LA DERECHA -->
+    <aside id="chat-drawer" class="chat-drawer hidden">
+      <div class="chat-drawer-topbar">
+        <strong>
+          <span>Chats</span>
+          <span id="chat-drawer-badge" class="chat-launcher-badge">0</span>
+        </strong>
+        <button type="button" class="btn-minimize-chat" onclick="closeChatDrawer()">Cerrar ▾</button>
+      </div>
+      <div class="chat-layout">
+        <div class="chat-sidebar">
+          <div class="chat-sidebar-head">
+            <h2>Conversaciones</h2>
+          </div>
+          <div id="chat-list" class="chat-list"></div>
+        </div>
+
+        <div class="chat-main" id="chat-main-area">
+          <div class="chat-empty-state">
+            <p>Selecciona una conversación o haz clic en <strong>Conectar y abrir chat</strong> en un compañero compatible.</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- MODAL PERFIL -->
+  <div id="profile-modal" class="modal hidden" onclick="if(event.target===this) closeProfileModal()">
+    <div class="modal-box">
+      <h3>Perfil</h3>
+      <p>Configura tu horario con mayor disponibilidad para que tus compañeros lo vean en compatibles y en el chat.</p>
+
+      <div id="profile-summary-box" class="profile-summary-card"></div>
+
+      <div class="group">
+        <label>Horario con mayor disponibilidad</label>
+        <div class="schedule-grid">
+          <button type="button" class="schedule-opt" data-sched="Mañana" onclick="selectProfileSchedule('Mañana')">
+            <span class="sched-icon">🌅</span>
+            <span class="sched-title">Mañana</span>
+            <span class="sched-sub">8:00 – 13:00</span>
+          </button>
+          <button type="button" class="schedule-opt" data-sched="Tarde" onclick="selectProfileSchedule('Tarde')">
+            <span class="sched-icon">☀️</span>
+            <span class="sched-title">Tarde</span>
+            <span class="sched-sub">13:00 – 18:00</span>
+          </button>
+          <button type="button" class="schedule-opt" data-sched="Noche" onclick="selectProfileSchedule('Noche')">
+            <span class="sched-icon">🌙</span>
+            <span class="sched-title">Noche</span>
+            <span class="sched-sub">18:00 – 23:00</span>
+          </button>
+        </div>
+        <span class="field-hint">Haz clic nuevamente en la opción marcada si deseas quitarla.</span>
+      </div>
+
+      <div class="group">
+        <label for="profile-wa-input">Número de WhatsApp (opcional)</label>
+        <input type="tel" id="profile-wa-input" placeholder="Ej. 987654321 o +51 987654321" />
+      </div>
+
+      <div id="profile-modal-err" class="error-box"></div>
+
+      <div class="modal-btns">
+        <button type="button" class="btn-sec" onclick="closeProfileModal()">Cancelar</button>
+        <button type="button" class="btn-connect" onclick="saveProfileModal()">Guardar perfil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ACCESO DIRECTO EN CELULAR -->
+  <div id="shortcut-modal" class="modal hidden" onclick="if(event.target===this) closeShortcutModal()">
+    <div class="modal-box">
+      <h3>Acceso directo en celular</h3>
+      <p>Guarda FIISTUDIO en la pantalla de inicio de tu teléfono para abrirlo como aplicación con un toque.</p>
+
+      <div class="shortcut-steps">
+        <div class="shortcut-step-card">
+          <strong>Android (Google Chrome)</strong>
+          Toca el menú <b>⋮</b> arriba a la derecha y selecciona <b>"Añadir a pantalla de inicio"</b> o <b>"Instalar aplicación"</b>.
+        </div>
+        <div class="shortcut-step-card">
+          <strong>iPhone / iOS (Safari)</strong>
+          Toca el botón <b>Compartir</b> (cuadro con flecha hacia arriba) y elige <b>"Añadir a pantalla de inicio"</b>.
+        </div>
+      </div>
+
+      <div id="copy-link-feedback" class="copy-feedback hidden">Enlace copiado al portapapeles.</div>
+
+      <div class="modal-btns">
+        <button type="button" class="btn-sec" onclick="copyAppUrl()">Copiar enlace</button>
+        <button type="button" class="btn-connect" onclick="closeShortcutModal()">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR WHATSAPP RÁPIDO -->
+  <div id="wa-modal" class="modal hidden" onclick="if(event.target===this) closeWaModal()">
+    <div class="modal-box">
+      <h3>Tu número de WhatsApp</h3>
+      <p>Actualiza tu número para que tus compañeros compatibles puedan contactarte directamente.</p>
+      <div class="group">
+        <label for="edit-wa-input">WhatsApp</label>
+        <input type="tel" id="edit-wa-input" placeholder="Ej. 987654321 o +51 987654321" />
+      </div>
+      <div id="wa-modal-err" class="error-box"></div>
+      <div class="modal-btns">
+        <button type="button" class="btn-sec" onclick="closeWaModal()">Cancelar</button>
+        <button type="button" class="btn-connect" onclick="saveWhatsappNumber()">Guardar número</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMAR VACIAR CHAT -->
+  <div id="clear-chat-modal" class="modal hidden" onclick="if(event.target===this) closeClearChatModal()">
+    <div class="modal-box">
+      <h3>¿Vaciar este chat?</h3>
+      <p>Se eliminarán todos los mensajes de esta conversación. Esta acción no se puede deshacer.</p>
+      <div class="modal-btns">
+        <button type="button" class="btn-sec" onclick="closeClearChatModal()">Cancelar</button>
+        <button type="button" class="btn-danger" onclick="confirmClearChat()">Sí, vaciar chat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL VISOR DE IMAGEN EN GRANDE -->
+  <div id="img-lightbox-modal" class="modal hidden" onclick="if(event.target===this) closeImageLightbox()">
+    <div class="lightbox-box">
+      <img id="lightbox-img" src="" alt="Vista ampliada" />
+      <button type="button" class="btn-sec" onclick="closeImageLightbox()">Cerrar imagen</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // CONFIGURACIÓN DE SUPABASE:
+    const SUPABASE_URL = "https://sbrrzwirzblcdgggfics.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_0w_CTZzXW1cZyKkPAWtRsw_Tg7Wg7bJ";
+
+    const isConfigured = Boolean(SUPABASE_KEY);
+    const db = isConfigured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+    const COURSES = [
+      { code: "BIC01", name: "Introducción a la Computación", area: "Común FIIS" },
+      { code: "FIA01", name: "Introducción a la Ingeniería en Inteligencia Artificial", area: "Ing. en Inteligencia Artificial" },
+      { code: "FIS01", name: "Introducción a la Ingeniería de Sistemas", area: "Ing. de Sistemas" },
+      { code: "FSW01", name: "Introducción a la Ingeniería de Software", area: "Ing. de Software" },
+      { code: "FII01", name: "Introducción a la Ingeniería Industrial", area: "Ing. Industrial" },
+      { code: "BMA01", name: "Cálculo Diferencial", area: "Ciencias Básicas" },
+      { code: "BMA02", name: "Cálculo Integral", area: "Ciencias Básicas" },
+      { code: "BMA03", name: "Álgebra Lineal", area: "Ciencias Básicas" },
+      { code: "FB101", name: "Geometría Analítica", area: "Ciencias Básicas" },
+      { code: "BFI01", name: "Física I", area: "Ciencias Básicas" },
+      { code: "BFI02", name: "Física II", area: "Ciencias Básicas" },
+      { code: "BQU01", name: "Química I", area: "Ciencias Básicas" },
+      { code: "FB401", name: "Algoritmos y Estructura de Datos", area: "Sistemas / Software / IA" },
+      { code: "BEG01", name: "Estadística y Probabilidades", area: "Matemática Aplicada" },
+      { code: "FII31", name: "Investigación de Operaciones I", area: "Ing. Industrial" },
+      { code: "BRC01", name: "Redacción y Comunicación", area: "Humanidades" },
+      { code: "BDP01", name: "Desarrollo Personal", area: "Humanidades" }
+    ];
+
+    const DEMO_PEERS = [
+      { name: "Valeria Quispe", major: "Ing. en Inteligencia Artificial", cycle: "1er ciclo", email: "valeria.quispe@gmail.com", whatsapp: "+51 984 312 710", schedule: "Mañana", domina: ["BMA01", "BIC01", "FIA01"], ayuda: ["BQU01", "BRC01"] },
+      { name: "Diego Huamán", major: "Ing. de Sistemas", cycle: "2do ciclo", email: "diego.huaman.uni@gmail.com", whatsapp: "+51 971 509 428", schedule: "Noche", domina: ["FIS01", "BMA02", "FB401"], ayuda: ["BFI01", "BEG01"] },
+      { name: "Sofía Paredes", major: "Ing. Industrial", cycle: "1er ciclo", email: "sofia.paredes.fiis@gmail.com", whatsapp: "+51 962 840 195", schedule: "Tarde", domina: ["FII01", "BQU01", "BRC01"], ayuda: ["BMA01", "BIC01"] }
+    ];
+
+    const mem = {};
+    const store = {
+      get: function(k) { try { return window.localStorage.getItem(k); } catch (e) { return mem[k] || null; } },
+      set: function(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
+    };
+
+    const MOON_SVG = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>';
+    const SUN_SVG = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+    let user = null;
+    let isDemoMode = false;
+    let onlinePeers = [];
+    let onlineChats = {};
+    let demoConnections = [];
+    let realtimeChannel = null;
+    let syncTimer = null;
+    let filter = "all";
+    let activeChatEmail = null;
+    let renderedChatPeerEmail = null;
+    let chatDrafts = {};
+    let chatPendingImages = {};
+    let tempProfileSchedule = "";
+    let editingMsgId = null;
+    let editingDraftText = "";
+    let confirmDeleteMsgId = null;
+
+    /* ESTADO DE MENSAJES NO LEÍDOS */
+    let readMessageIds = new Set();
+    let knownMessageIds = new Set();
+    let hasInitialMessageSync = false;
+    let bellShineTimeout = null;
+
+    /* ACCESO DIRECTO EN CELULAR (PWA) */
+    let deferredInstallPrompt = null;
+
+    function setupMobilePwa() {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.fillStyle = "#263d37";
+          ctx.fillRect(0, 0, 512, 512);
+          ctx.fillStyle = "#3b7a6b";
+          ctx.fillRect(36, 36, 440, 440);
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 116px sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("FIIS", 256, 215);
+          ctx.font = "bold 54px sans-serif";
+          ctx.fillStyle = "#d7ebe5";
+          ctx.fillText("STUDIO", 256, 325);
+
+          const iconDataUrl = canvas.toDataURL("image/png");
+          const appleIcon = document.createElement("link");
+          appleIcon.rel = "apple-touch-icon";
+          appleIcon.href = iconDataUrl;
+          document.head.appendChild(appleIcon);
+
+          const favIcon = document.createElement("link");
+          favIcon.rel = "icon";
+          favIcon.type = "image/png";
+          favIcon.href = iconDataUrl;
+          document.head.appendChild(favIcon);
+
+          const manifestObj = {
+            name: "FIISTUDIO | FIIS - UNI",
+            short_name: "FIISTUDIO",
+            description: "Conecta con compañeros de la FIIS-UNI por cursos y horarios",
+            start_url: window.location.href,
+            display: "standalone",
+            background_color: "#e9f0ed",
+            theme_color: "#263d37",
+            icons: [
+              { src: iconDataUrl, sizes: "192x192", type: "image/png" },
+              { src: iconDataUrl, sizes: "512x512", type: "image/png" }
+            ]
+          };
+          const blob = new Blob([JSON.stringify(manifestObj)], { type: "application/manifest+json" });
+          const manifestLink = document.createElement("link");
+          manifestLink.rel = "manifest";
+          manifestLink.href = URL.createObjectURL(blob);
+          document.head.appendChild(manifestLink);
+        }
+      } catch (e) {}
+
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      if (isStandalone) {
+        const btn = document.getElementById("btn-install-shortcut");
+        if (btn) btn.classList.add("hidden");
+      }
+    }
+
+    window.addEventListener("beforeinstallprompt", function(e) {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
+
+    window.addEventListener("appinstalled", function() {
+      deferredInstallPrompt = null;
+      const btn = document.getElementById("btn-install-shortcut");
+      if (btn) btn.classList.add("hidden");
+    });
+
+    async function handleMobileShortcutClick() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        if (choice && choice.outcome === "accepted") {
+          deferredInstallPrompt = null;
+        }
+        return;
+      }
+      document.getElementById("copy-link-feedback").classList.add("hidden");
+      document.getElementById("shortcut-modal").classList.remove("hidden");
+    }
+
+    function closeShortcutModal() {
+      document.getElementById("shortcut-modal").classList.add("hidden");
+    }
+
+    function copyAppUrl() {
+      const url = window.location.href;
+      const fb = document.getElementById("copy-link-feedback");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+          fb.classList.remove("hidden");
+        }).catch(function() {
+          fb.textContent = "Enlace: " + url;
+          fb.classList.remove("hidden");
+        });
+      } else {
+        fb.textContent = "Enlace: " + url;
+        fb.classList.remove("hidden");
+      }
+    }
+
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function getInitials(name) {
+      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return String(name || "??").trim().slice(0, 2).toUpperCase();
+    }
+
+    function extractScheduleFromProfile(p) {
+      if (!p) return "";
+      if (p.schedule && ["Mañana", "Tarde", "Noche"].includes(p.schedule)) {
+        return p.schedule;
+      }
+      const conns = Array.isArray(p.connections) ? p.connections : [];
+      const tag = conns.find(function(c) { return typeof c === "string" && c.startsWith("__sched:"); });
+      return tag ? tag.slice(8) : "";
+    }
+
+    function cleanConnectionsArray(arr) {
+      return (Array.isArray(arr) ? arr : []).filter(function(c) {
+        return typeof c === "string" && !c.startsWith("__sched:");
+      });
+    }
+
+    function formatScheduleBadge(sched) {
+      if (!sched) return "";
+      const icons = { "Mañana": "🌅", "Tarde": "☀️", "Noche": "🌙" };
+      const ico = icons[sched] || "🕒";
+      return '<span class="chat-sched-badge" title="Horario más disponible: ' + escapeHtml(sched) + '">' + ico + ' ' + escapeHtml(sched) + '</span>';
+    }
+
+    function parseMessageContent(rawText) {
+      const str = String(rawText || "");
+      if (!str.startsWith("__img__:")) {
+        return { isImage: false, imageUrl: "", caption: str };
+      }
+      const rest = str.slice(8);
+      const capIdx = rest.indexOf("\n__cap__:");
+      if (capIdx === -1) {
+        return { isImage: true, imageUrl: rest, caption: "" };
+      }
+      return {
+        isImage: true,
+        imageUrl: rest.slice(0, capIdx),
+        caption: rest.slice(capIdx + 9)
+      };
+    }
+
+    function encodeMessageContent(imageUrl, captionText) {
+      if (!imageUrl) return captionText;
+      return captionText
+        ? "__img__:" + imageUrl + "\n__cap__:" + captionText
+        : "__img__:" + imageUrl;
+    }
+
+    function formatMsgTime(isoOrStr) {
+      if (!isoOrStr) return "";
+      const d = new Date(isoOrStr);
+      if (isNaN(d.getTime())) return String(isoOrStr);
+      return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      store.set("fiis_theme", theme);
+      const icon = theme === "dark" ? SUN_SVG : MOON_SVG;
+      document.getElementById("theme-btn-auth").innerHTML = icon;
+      document.getElementById("theme-btn-nav").innerHTML = icon;
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme") || "light";
+      applyTheme(current === "dark" ? "light" : "dark");
+    }
+
+    function showErr(msg) {
+      const box = document.getElementById("error-box");
+      box.textContent = msg;
+      box.style.display = "block";
+    }
+
+    function hideErr() {
+      document.getElementById("error-box").style.display = "none";
+    }
+
+    function isValidEmail(email) {
+      if (!email || email.indexOf("..") !== -1) return false;
+      return /^[a-z0-9][a-z0-9._%+-]{0,62}[a-z0-9]@(gmail\.com|uni\.pe)$/.test(email);
+    }
+
+    function parseWhatsapp(raw) {
+      const cleaned = (raw || "").trim();
+      if (!cleaned) return { valid: true, display: "", digits: "" };
+      const digitsOnly = cleaned.replace(/\D/g, "");
+      if (digitsOnly.length < 9 || digitsOnly.length > 15) {
+        return { valid: false, display: "", digits: "" };
+      }
+      if (digitsOnly.length === 9 && digitsOnly.startsWith("9")) {
+        return {
+          valid: true,
+          display: "+51 " + digitsOnly.slice(0, 3) + " " + digitsOnly.slice(3, 6) + " " + digitsOnly.slice(6),
+          digits: "51" + digitsOnly
+        };
+      }
+      return { valid: true, display: "+" + digitsOnly, digits: digitsOnly };
+    }
+
+    function buildWaLink(waStr, text) {
+      const parsed = parseWhatsapp(waStr);
+      if (!parsed.digits) return "";
+      return "https://wa.me/" + parsed.digits + "?text=" + encodeURIComponent(text || "");
+    }
+
+    function pairKey(emailA, emailB) {
+      return [emailA.toLowerCase(), emailB.toLowerCase()].sort().join("__");
+    }
+
+    /* GESTIÓN DE MENSAJES NO LEÍDOS Y BRILLO DE CAMPANA */
+    function loadReadStateForUser(email) {
+      const raw = store.get("fiis_read_ids_" + email);
+      if (!raw) return null;
+      try {
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? new Set(arr.map(String)) : new Set();
+      } catch (e) {
+        return new Set();
+      }
+    }
+
+    function saveReadStateForUser() {
+      if (!user) return;
+      const arr = Array.from(readMessageIds).slice(-600);
+      store.set("fiis_read_ids_" + user.email, JSON.stringify(arr));
+    }
+
+    function isChatDrawerOpen() {
+      const drawer = document.getElementById("chat-drawer");
+      return drawer && !drawer.classList.contains("hidden");
+    }
+
+    function markPeerMessagesAsRead(peerEmail) {
+      if (!user || !peerEmail) return;
+      const key = pairKey(user.email, peerEmail);
+      const msgs = onlineChats[key] || [];
+      let changed = false;
+      msgs.forEach(function(m) {
+        if (m.sender !== user.email && !readMessageIds.has(String(m.id))) {
+          readMessageIds.add(String(m.id));
+          changed = true;
+        }
+      });
+      if (changed) saveReadStateForUser();
+      updateUnreadBellUI();
+    }
+
+    function getPeerUnreadCount(peerEmail) {
+      if (!user || !peerEmail) return 0;
+      const key = pairKey(user.email, peerEmail);
+      const msgs = onlineChats[key] || [];
+      let count = 0;
+      msgs.forEach(function(m) {
+        if (m.sender !== user.email && !readMessageIds.has(String(m.id))) {
+          count++;
+        }
+      });
+      return count;
+    }
+
+    function getTotalUnreadCount() {
+      if (!user) return 0;
+      let total = 0;
+      Object.keys(onlineChats).forEach(function(key) {
+        const msgs = onlineChats[key] || [];
+        msgs.forEach(function(m) {
+          if (m.sender !== user.email && !readMessageIds.has(String(m.id))) {
+            total++;
+          }
+        });
+      });
+      return total;
+    }
+
+    function updateUnreadBellUI() {
+      const total = getTotalUnreadCount();
+      const bellBtn = document.getElementById("unread-bell-btn");
+      const numEl = document.getElementById("unread-count-num");
+      if (numEl) numEl.textContent = total;
+      if (bellBtn) {
+        bellBtn.classList.toggle("has-unread", total > 0);
+      }
+      document.title = total > 0 ? "(" + total + ") FIISTUDIO | FIIS - UNI" : "FIISTUDIO | FIIS - UNI";
+    }
+
+    function triggerBellShine() {
+      const bellBtn = document.getElementById("unread-bell-btn");
+      if (!bellBtn) return;
+      bellBtn.classList.remove("bell-shine");
+      void bellBtn.offsetWidth;
+      bellBtn.classList.add("bell-shine");
+      if (bellShineTimeout) clearTimeout(bellShineTimeout);
+      bellShineTimeout = setTimeout(function() {
+        bellBtn.classList.remove("bell-shine");
+      }, 2400);
+    }
+
+    function handleBellClick() {
+      const conns = getConnectionsList();
+      const firstUnreadPeer = conns.find(function(em) { return getPeerUnreadCount(em) > 0; });
+      if (firstUnreadPeer) {
+        activeChatEmail = firstUnreadPeer;
+      }
+      openChatDrawer();
+    }
+
+    /* AUTENTICACIÓN ONLINE CON SUPABASE */
+    async function submitAuth() {
+      hideErr();
+      if (!db) {
+        return showErr("Falta pegar tu Publishable key de Supabase en la constante SUPABASE_KEY dentro de index.html.");
+      }
+
+      const isReg = document.getElementById("mode-register").checked;
+      const email = document.getElementById("auth-email").value.trim().toLowerCase();
+      const password = document.getElementById("auth-password").value;
+
+      if (!isValidEmail(email)) {
+        return showErr("Correo inválido. Escribe un Gmail real (ej. alumno@gmail.com) o institucional (@uni.pe).");
+      }
+      if (password.length < 6) {
+        return showErr("La contraseña debe tener al menos 6 caracteres.");
+      }
+
+      const btn = document.getElementById("btn-auth-submit");
+      btn.disabled = true;
+      btn.textContent = "Conectando...";
+
+      try {
+        if (isReg) {
+          const name = document.getElementById("reg-name").value.trim();
+          const waParsed = parseWhatsapp(document.getElementById("reg-whatsapp").value);
+
+          if (name.length < 3) throw new Error("Ingresa tu nombre y apellido.");
+          if (!waParsed.valid) throw new Error("Número de WhatsApp inválido (usa 9 dígitos o +51...).");
+
+          const { data, error } = await db.auth.signUp({ email: email, password: password });
+          if (error) {
+            if (error.message.toLowerCase().includes("already registered")) {
+              throw new Error("Ese correo ya está registrado. Cambia a 'Iniciar sesión'.");
+            }
+            throw new Error(error.message);
+          }
+
+          if (!data.session) {
+            throw new Error("Cuenta creada, pero debes desactivar 'Confirm email' en Supabase (Authentication > Providers > Email) para entrar directamente.");
+          }
+
+          const nuevo = {
+            email: email,
+            name: name,
+            major: document.getElementById("reg-major").value,
+            cycle: document.getElementById("reg-cycle").value,
+            whatsapp: waParsed.display,
+            schedule: "",
+            domina: [],
+            ayuda: [],
+            connections: []
+          };
+
+          const insertPayload = {
+            email: nuevo.email,
+            name: nuevo.name,
+            major: nuevo.major,
+            cycle: nuevo.cycle,
+            whatsapp: nuevo.whatsapp,
+            domina: [],
+            ayuda: [],
+            connections: []
+          };
+
+          const { error: profErr } = await db.from("profiles").upsert(insertPayload);
+          if (profErr) throw new Error("Error guardando perfil: " + profErr.message);
+
+          await openDashboard(nuevo, false);
+        } else {
+          const { error } = await db.auth.signInWithPassword({ email: email, password: password });
+          if (error) {
+            throw new Error("Correo o contraseña incorrectos, o la cuenta aún no existe.");
+          }
+          const profile = await fetchOrCreateProfile(email);
+          await openDashboard(profile, false);
+        }
+      } catch (err) {
+        showErr(err.message || "Error de conexión.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Continuar al panel";
+      }
+    }
+
+    async function fetchOrCreateProfile(email) {
+      const { data } = await db.from("profiles").select("*").eq("email", email).maybeSingle();
+      if (data) {
+        data.schedule = extractScheduleFromProfile(data);
+        data.domina = data.domina || [];
+        data.ayuda = data.ayuda || [];
+        data.connections = cleanConnectionsArray(data.connections);
+        return data;
+      }
+      const fallback = {
+        email: email,
+        name: email.split("@")[0],
+        major: "Ing. de Sistemas",
+        cycle: "1er ciclo",
+        whatsapp: "",
+        schedule: "",
+        domina: [],
+        ayuda: [],
+        connections: []
+      };
+      await db.from("profiles").upsert({
+        email: fallback.email,
+        name: fallback.name,
+        major: fallback.major,
+        cycle: fallback.cycle,
+        whatsapp: "",
+        domina: [],
+        ayuda: [],
+        connections: []
+      });
+      return fallback;
+    }
+
+    async function loginDemo() {
+      hideErr();
+      demoConnections = [];
+      onlineChats = {};
+      chatDrafts = {};
+      chatPendingImages = {};
+      await openDashboard({
+        name: "Estudiante FIIS (Demo)",
+        major: "Ing. en Inteligencia Artificial",
+        cycle: "1er ciclo",
+        whatsapp: "+51 987 654 321",
+        schedule: "Tarde",
+        email: "demo.fiis@gmail.com",
+        domina: ["BMA01", "BIC01"],
+        ayuda: ["BQU01", "BRC01"],
+        connections: []
+      }, true);
+    }
+
+    function updateUserHeader() {
+      document.getElementById("user-display").textContent = user.name + " (" + user.major + " • " + user.cycle + ")";
+      const schedEl = document.getElementById("user-sched-display");
+      schedEl.textContent = user.schedule ? "Disponible: " + user.schedule : "Definir horario";
+      const waEl = document.getElementById("user-wa-display");
+      waEl.textContent = user.whatsapp ? "WhatsApp: " + user.whatsapp : "+ Añadir WhatsApp";
+      const badge = document.getElementById("mode-indicator");
+      badge.innerHTML = isDemoMode
+        ? 'Modo demo local'
+        : '<span class="online-dot"></span> Online en vivo';
+    }
+
+    async function openDashboard(u, demo) {
+      user = u;
+      isDemoMode = !!demo;
+      renderedChatPeerEmail = null;
+      chatDrafts = {};
+      chatPendingImages = {};
+      knownMessageIds = new Set();
+      hasInitialMessageSync = false;
+
+      const savedRead = loadReadStateForUser(user.email);
+      readMessageIds = savedRead || new Set();
+
+      document.getElementById("auth-view").classList.add("hidden");
+      document.getElementById("theme-btn-auth").classList.add("hidden");
+      document.getElementById("app-view").classList.remove("hidden");
+      updateUserHeader();
+      closeChatDrawer();
+      renderSelectedCourses();
+
+      if (isDemoMode) {
+        onlinePeers = DEMO_PEERS.slice();
+        updateChatBadge();
+        updateUnreadBellUI();
+        renderMatches();
+      } else {
+        await refreshOnlineData();
+        setupRealtime();
+      }
+    }
+
+    async function logoutUser() {
+      if (realtimeChannel && db) {
+        db.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+      }
+      if (syncTimer) {
+        clearInterval(syncTimer);
+        syncTimer = null;
+      }
+      if (!isDemoMode && db) {
+        await db.auth.signOut();
+      }
+      user = null;
+      isDemoMode = false;
+      onlinePeers = [];
+      onlineChats = {};
+      activeChatEmail = null;
+      renderedChatPeerEmail = null;
+      chatDrafts = {};
+      chatPendingImages = {};
+      readMessageIds = new Set();
+      knownMessageIds = new Set();
+      hasInitialMessageSync = false;
+      editingMsgId = null;
+      editingDraftText = "";
+      confirmDeleteMsgId = null;
+      document.title = "FIISTUDIO | FIIS - UNI";
+      closeChatDrawer();
+      document.getElementById("app-view").classList.add("hidden");
+      document.getElementById("auth-view").classList.remove("hidden");
+      document.getElementById("theme-btn-auth").classList.remove("hidden");
+      document.getElementById("auth-email").value = "";
+      document.getElementById("auth-password").value = "";
+      document.getElementById("course-search-input").value = "";
+      document.getElementById("course-dropdown").classList.add("hidden");
+    }
+
+    /* SINCRONIZACIÓN CON SUPABASE Y REALTIME */
+    async function syncUserProfile() {
+      if (isDemoMode || !db || !user) return;
+      const cleanConns = cleanConnectionsArray(user.connections);
+      const packedConns = user.schedule
+        ? cleanConns.concat(["__sched:" + user.schedule])
+        : cleanConns;
+
+      const basePayload = {
+        domina: user.domina,
+        ayuda: user.ayuda,
+        whatsapp: user.whatsapp,
+        connections: packedConns,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await db.from("profiles").update(
+        Object.assign({}, basePayload, { schedule: user.schedule || "" })
+      ).eq("email", user.email);
+
+      if (error) {
+        await db.from("profiles").update(basePayload).eq("email", user.email);
+      }
+    }
+
+    async function refreshOnlineData() {
+      if (isDemoMode || !db || !user) return;
+
+      const [peersRes, msgsRes] = await Promise.all([
+        db.from("profiles").select("*").neq("email", user.email),
+        db.from("messages").select("*").ilike("chat_key", "%" + user.email + "%").order("created_at", { ascending: true })
+      ]);
+
+      if (peersRes.data) {
+        onlinePeers = peersRes.data.map(function(p) {
+          p.schedule = extractScheduleFromProfile(p);
+          p.domina = p.domina || [];
+          p.ayuda = p.ayuda || [];
+          p.connections = cleanConnectionsArray(p.connections);
+          return p;
+        });
+      }
+
+      const grouped = {};
+      const discoveredEmails = new Set(cleanConnectionsArray(user.connections));
+      const hadStoredReadHistory = loadReadStateForUser(user.email) !== null;
+      let brandNewUnreadArrived = false;
+
+      if (msgsRes.data) {
+        msgsRes.data.forEach(function(row) {
+          if (!grouped[row.chat_key]) grouped[row.chat_key] = [];
+          grouped[row.chat_key].push({
+            id: row.id,
+            sender: row.sender_email,
+            text: row.text,
+            time: formatMsgTime(row.created_at),
+            edited: !!row.edited
+          });
+
+          const parts = row.chat_key.split("__");
+          let peerEmail = "";
+          parts.forEach(function(em) {
+            if (em && em !== user.email) {
+              discoveredEmails.add(em);
+              peerEmail = em;
+            }
+          });
+
+          const idStr = String(row.id);
+          if (row.sender_email !== user.email) {
+            if (!hasInitialMessageSync && !hadStoredReadHistory) {
+              readMessageIds.add(idStr);
+            } else if (isChatDrawerOpen() && activeChatEmail === peerEmail && document.visibilityState === "visible") {
+              readMessageIds.add(idStr);
+            } else if (hasInitialMessageSync && !knownMessageIds.has(idStr) && !readMessageIds.has(idStr)) {
+              brandNewUnreadArrived = true;
+            }
+          }
+          knownMessageIds.add(idStr);
+        });
+      }
+
+      hasInitialMessageSync = true;
+      saveReadStateForUser();
+
+      onlineChats = grouped;
+      user.connections = Array.from(discoveredEmails);
+
+      updateChatBadge();
+      updateUnreadBellUI();
+      if (brandNewUnreadArrived) {
+        triggerBellShine();
+      }
+
+      renderMatches();
+      if (isChatDrawerOpen()) {
+        renderChatSidebar();
+        renderActiveChat();
+      }
+    }
+
+    function setupRealtime() {
+      if (!db || realtimeChannel) return;
+      realtimeChannel = db.channel("fiis-online-room")
+        .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, function() {
+          refreshOnlineData();
+        })
+        .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, function() {
+          refreshOnlineData();
+        })
+        .subscribe();
+
+      if (!syncTimer) {
+        syncTimer = setInterval(function() {
+          if (user && !isDemoMode) refreshOnlineData();
+        }, 7000);
+      }
+    }
+
+    /* MODAL PERFIL (HORARIO DISPONIBLE + WHATSAPP) */
+    function openProfileModal() {
+      if (!user) return;
+      document.getElementById("profile-modal-err").style.display = "none";
+      document.getElementById("profile-summary-box").innerHTML =
+        "<strong>" + escapeHtml(user.name) + "</strong>" +
+        "<span>" + escapeHtml(user.major) + " • " + escapeHtml(user.cycle) + " • " + escapeHtml(user.email) + "</span>";
+      document.getElementById("profile-wa-input").value = user.whatsapp || "";
+      tempProfileSchedule = user.schedule || "";
+      updateScheduleOptionUI();
+      document.getElementById("profile-modal").classList.remove("hidden");
+    }
+
+    function closeProfileModal() {
+      document.getElementById("profile-modal").classList.add("hidden");
+    }
+
+    function selectProfileSchedule(sched) {
+      tempProfileSchedule = (tempProfileSchedule === sched) ? "" : sched;
+      updateScheduleOptionUI();
+    }
+
+    function updateScheduleOptionUI() {
+      document.querySelectorAll("#profile-modal .schedule-opt").forEach(function(btn) {
+        btn.classList.toggle("active", btn.getAttribute("data-sched") === tempProfileSchedule);
+      });
+    }
+
+    async function saveProfileModal() {
+      const parsed = parseWhatsapp(document.getElementById("profile-wa-input").value);
+      const errEl = document.getElementById("profile-modal-err");
+      if (!parsed.valid) {
+        errEl.textContent = "Número de WhatsApp inválido. Usa 9 dígitos (ej. 987654321) o formato internacional (+51...).";
+        errEl.style.display = "block";
+        return;
+      }
+      user.schedule = tempProfileSchedule;
+      user.whatsapp = parsed.display;
+      updateUserHeader();
+      closeProfileModal();
+      await syncUserProfile();
+      if (isChatDrawerOpen()) {
+        renderChatSidebar();
+        updateChatHeaderInfo();
+      }
+    }
+
+    /* EDITAR WHATSAPP DESDE EL PANEL */
+    function openWaModal() {
+      document.getElementById("wa-modal-err").style.display = "none";
+      document.getElementById("edit-wa-input").value = user.whatsapp || "";
+      document.getElementById("wa-modal").classList.remove("hidden");
+    }
+
+    function closeWaModal() {
+      document.getElementById("wa-modal").classList.add("hidden");
+    }
+
+    async function saveWhatsappNumber() {
+      const parsed = parseWhatsapp(document.getElementById("edit-wa-input").value);
+      const errEl = document.getElementById("wa-modal-err");
+      if (!parsed.valid) {
+        errEl.textContent = "Número inválido. Usa 9 dígitos (ej. 987654321) o formato internacional (+51...).";
+        errEl.style.display = "block";
+        return;
+      }
+      user.whatsapp = parsed.display;
+      updateUserHeader();
+      closeWaModal();
+      await syncUserProfile();
+      if (activeChatEmail && isChatDrawerOpen()) {
+        updateChatHeaderInfo();
+      }
+    }
+
+    /* ABRIR / CERRAR DOCK Y VENTANA DE CHAT */
+    function openChatDrawer() {
+      document.getElementById("floating-chat-dock").classList.add("hidden");
+      document.getElementById("chat-drawer").classList.remove("hidden");
+      renderChatSidebar();
+      if (activeChatEmail) {
+        markPeerMessagesAsRead(activeChatEmail);
+        renderChatSidebar();
+      }
+      renderActiveChat();
+      const input = document.getElementById("chat-msg-input");
+      if (input && !editingMsgId) input.focus();
+    }
+
+    function closeChatDrawer() {
+      document.getElementById("chat-drawer").classList.add("hidden");
+      document.getElementById("floating-chat-dock").classList.remove("hidden");
+      updateUnreadBellUI();
+    }
+
+    /* BUSCADOR DE CURSOS */
+    function normalizeText(str) {
+      return str.toLowerCase()
+        .replace(/[áàäâ]/g, "a")
+        .replace(/[éèëê]/g, "e")
+        .replace(/[íìïî]/g, "i")
+        .replace(/[óòöô]/g, "o")
+        .replace(/[úùüû]/g, "u")
+        .replace(/ñ/g, "n");
+    }
+
+    function openCourseMenu() {
+      renderDropdownCourses();
+      document.getElementById("course-dropdown").classList.remove("hidden");
+    }
+
+    function clearCourseSearch() {
+      const input = document.getElementById("course-search-input");
+      input.value = "";
+      input.focus();
+      renderDropdownCourses();
+    }
+
+    async function toggleCourse(code, type) {
+      if (type === "domina") {
+        user.ayuda = user.ayuda.filter(function(x) { return x !== code; });
+        user.domina = user.domina.includes(code)
+          ? user.domina.filter(function(x) { return x !== code; })
+          : user.domina.concat([code]);
+      } else {
+        user.domina = user.domina.filter(function(x) { return x !== code; });
+        user.ayuda = user.ayuda.includes(code)
+          ? user.ayuda.filter(function(x) { return x !== code; })
+          : user.ayuda.concat([code]);
+      }
+      renderDropdownCourses();
+      renderSelectedCourses();
+      renderMatches();
+      await syncUserProfile();
+    }
+
+    function renderDropdownCourses() {
+      const dropdown = document.getElementById("course-dropdown");
+      const rawQuery = document.getElementById("course-search-input").value.trim();
+      document.getElementById("clear-search-btn").classList.toggle("hidden", rawQuery.length === 0);
+
+      const terms = normalizeText(rawQuery).split(/\s+/).filter(Boolean);
+      const filtered = COURSES.filter(function(c) {
+        if (!terms.length) return true;
+        const text = normalizeText(c.code + " " + c.name + " " + c.area);
+        return terms.every(function(t) { return text.includes(t); });
+      });
+
+      if (!filtered.length) {
+        dropdown.innerHTML = '<div style="padding:0.9rem;text-align:center;color:var(--text-muted);font-size:0.86rem;">No se encontraron cursos.</div>';
+        return;
+      }
+
+      dropdown.innerHTML = filtered.map(function(c) {
+        return '<div class="course-row">' +
+          '<div><strong>' + c.code + ' — ' + c.name + '</strong><span>' + c.area + '</span></div>' +
+          '<div class="btns">' +
+            '<button type="button" class="chip domina ' + (user.domina.includes(c.code) ? 'active' : '') + '" onclick="toggleCourse(\'' + c.code + '\', \'domina\')">Lo domino</button>' +
+            '<button type="button" class="chip ayuda ' + (user.ayuda.includes(c.code) ? 'active' : '') + '" onclick="toggleCourse(\'' + c.code + '\', \'ayuda\')">Necesito ayuda</button>' +
+          '</div>' +
+        '</div>';
+      }).join("");
+    }
+
+    function courseLabel(code) {
+      const f = COURSES.find(function(c) { return c.code === code; });
+      return f ? f.code + " — " + f.name : code;
+    }
+
+    function renderSelectedCourses() {
+      const domBox = document.getElementById("selected-domina");
+      const ayuBox = document.getElementById("selected-ayuda");
+
+      domBox.innerHTML = user.domina.length
+        ? user.domina.map(function(c) {
+            return '<span class="sel-tag domina">' + courseLabel(c) + ' <button type="button" onclick="toggleCourse(\'' + c + '\', \'domina\')">×</button></span>';
+          }).join("")
+        : '<span class="none-text">Aún no has marcado cursos que dominas.</span>';
+
+      ayuBox.innerHTML = user.ayuda.length
+        ? user.ayuda.map(function(c) {
+            return '<span class="sel-tag ayuda">' + courseLabel(c) + ' <button type="button" onclick="toggleCourse(\'' + c + '\', \'ayuda\')">×</button></span>';
+          }).join("")
+        : '<span class="none-text">Aún no has marcado cursos donde pides apoyo.</span>';
+    }
+
+    /* COMPATIBILIDAD */
+    function setFilter(f, btn) {
+      filter = f;
+      document.querySelectorAll(".pill").forEach(function(p) { p.classList.remove("active"); });
+      btn.classList.add("active");
+      renderMatches();
+    }
+
+    function calcMatch(u, p) {
+      const peerHelps = u.ayuda.filter(function(c) { return p.domina.includes(c); });
+      const userHelps = u.domina.filter(function(c) { return p.ayuda.includes(c); });
+      if (!peerHelps.length && !userHelps.length) return { score: 0, peerHelps: [], userHelps: [], mutual: false };
+      const mutual = peerHelps.length > 0 && userHelps.length > 0;
+      let score = 0;
+      if (u.ayuda.length && u.domina.length) {
+        score = Math.round((peerHelps.length / u.ayuda.length) * 55 + Math.min(1, userHelps.length / Math.max(1, p.ayuda.length)) * 35 + (mutual ? 10 : 0));
+      } else if (u.ayuda.length) {
+        score = Math.round((peerHelps.length / u.ayuda.length) * 95);
+      } else {
+        score = Math.round(Math.min(1, userHelps.length / Math.max(1, p.ayuda.length)) * 90);
+      }
+      return { score: Math.min(100, Math.max(15, score)), peerHelps: peerHelps, userHelps: userHelps, mutual: mutual };
+    }
+
+    function renderMatches() {
+      const box = document.getElementById("matches-container");
+      if (!user.domina.length && !user.ayuda.length) {
+        box.innerHTML = '<div class="empty">Haz clic en el buscador <strong>Cursos</strong> a la izquierda y selecciona al menos una materia para ver compañeros compatibles.</div>';
+        return;
+      }
+
+      const existingChats = getConnectionsList();
+      const allMatched = onlinePeers
+        .map(function(peer) { return { peer: peer, m: calcMatch(user, peer) }; })
+        .filter(function(x) { return x.m.score > 0; });
+
+      let list = allMatched.filter(function(x) { return !existingChats.includes(x.peer.email); });
+      if (filter === "mutual") list = list.filter(function(x) { return x.m.mutual; });
+      if (filter === "canHelpMe") list = list.filter(function(x) { return x.m.peerHelps.length > 0; });
+      list.sort(function(a, b) { return b.m.score - a.m.score; });
+
+      if (!list.length) {
+        let emptyMsg = 'No hay coincidencias con este filtro. Selecciona <strong>Todos</strong> o agrega más cursos.';
+        if (onlinePeers.length === 0) {
+          emptyMsg = 'Aún no hay otros compañeros registrados online. Comparte el enlace de Netlify con tus amigos de la FIIS para que creen su cuenta.';
+        } else if (allMatched.length > 0 && allMatched.every(function(x) { return existingChats.includes(x.peer.email); })) {
+          emptyMsg = 'Ya tienes un chat abierto con todos tus compañeros compatibles. Revisa el botón <strong>Chat</strong> abajo a la derecha.';
+        }
+        box.innerHTML = '<div class="empty">' + emptyMsg + '</div>';
+        return;
+      }
+
+      box.innerHTML = "";
+      list.forEach(function(item) {
+        const peer = item.peer, m = item.m;
+        const initials = getInitials(peer.name);
+        const teachHtml = m.peerHelps.length
+          ? m.peerHelps.map(function(c) { return '<span class="tag teach">' + courseLabel(c) + '</span>'; }).join("")
+          : '<span style="color:var(--text-muted);">Ninguno marcado</span>';
+        const learnHtml = m.userHelps.length
+          ? m.userHelps.map(function(c) { return '<span class="tag learn">' + courseLabel(c) + '</span>'; }).join("")
+          : '<span style="color:var(--text-muted);">Aún no requiere tus cursos</span>';
+
+        const introMsg = "Hola " + peer.name.split(" ")[0] + ", soy " + user.name + " de la FIIS (" + user.cycle + "). Hicimos match (" + m.score + "%) en FIISTUDIO. ¿Coordinamos para estudiar?";
+        const waUrl = peer.whatsapp ? buildWaLink(peer.whatsapp, introMsg) : "";
+
+        const card = document.createElement("div");
+        card.className = "match-card";
+        card.innerHTML =
+          '<div class="match-top">' +
+            '<div class="match-peer-info">' +
+              '<div class="match-avatar">' + escapeHtml(initials) + '</div>' +
+              '<div>' +
+                '<div class="match-name-row">' +
+                  '<h3>' + escapeHtml(peer.name) + '</h3>' +
+                  formatScheduleBadge(peer.schedule) +
+                '</div>' +
+                '<span class="peer-sub">' + escapeHtml(peer.major) + ' • ' + escapeHtml(peer.cycle) + '</span>' +
+                (peer.whatsapp ? '<span class="wa-mini-badge">WhatsApp: ' + escapeHtml(peer.whatsapp) + '</span>' : '') +
+              '</div>' +
+            '</div>' +
+            '<div><span class="score-pill">' + m.score + '% compatible</span>' + (m.mutual ? '<span class="mutual">★ Intercambio mutuo</span>' : '') + '</div>' +
+          '</div>' +
+          '<div class="details">' +
+            '<div><strong>Te puede apoyar en:</strong><div class="tags">' + teachHtml + '</div></div>' +
+            '<div><strong>Le puedes apoyar en:</strong><div class="tags">' + learnHtml + '</div></div>' +
+          '</div>' +
+          '<div class="card-actions">' +
+            '<button type="button" class="btn-connect">Conectar y abrir chat</button>' +
+            (waUrl ? '<a href="' + waUrl + '" target="_blank" rel="noopener" class="btn-wa-direct">Abrir WhatsApp</a>' : '') +
+          '</div>';
+
+        card.querySelector(".btn-connect").onclick = function() {
+          startChatWithPeer(peer.email);
+        };
+        box.appendChild(card);
+      });
+    }
+
+    /* SISTEMA DE CHATS EN TIEMPO REAL */
+    function getConnectionsList() {
+      return isDemoMode ? demoConnections : cleanConnectionsArray(user.connections);
+    }
+
+    function updateChatBadge() {
+      if (!user) return;
+      const count = getConnectionsList().length;
+      document.getElementById("chat-count-badge").textContent = count;
+      document.getElementById("chat-drawer-badge").textContent = count;
+    }
+
+    function saveChatDraft(val) {
+      if (activeChatEmail) {
+        chatDrafts[activeChatEmail] = val;
+      }
+    }
+
+    async function startChatWithPeer(peerEmail) {
+      if (isDemoMode) {
+        if (!demoConnections.includes(peerEmail)) demoConnections.unshift(peerEmail);
+      } else {
+        if (!user.connections.includes(peerEmail)) {
+          user.connections.unshift(peerEmail);
+          await syncUserProfile();
+        }
+      }
+      updateChatBadge();
+      renderMatches();
+      activeChatEmail = peerEmail;
+      editingMsgId = null;
+      editingDraftText = "";
+      confirmDeleteMsgId = null;
+      openChatDrawer();
+    }
+
+    function renderChatSidebar() {
+      const listEl = document.getElementById("chat-list");
+      const conns = getConnectionsList();
+      const peersMap = {};
+      onlinePeers.forEach(function(p) { peersMap[p.email] = p; });
+
+      if (!conns.length) {
+        listEl.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.8rem;">Aún no tienes chats activos. Conecta con un compañero compatible para iniciar uno.</div>';
+        return;
+      }
+
+      if (!activeChatEmail || !peersMap[activeChatEmail]) {
+        activeChatEmail = conns[0];
+      }
+
+      listEl.innerHTML = conns.map(function(email) {
+        const peer = peersMap[email];
+        if (!peer) return "";
+        const msgs = onlineChats[pairKey(user.email, email)] || [];
+        let lastMsg = "Conexión iniciada • Escribe aquí";
+        if (msgs.length) {
+          const parsedLast = parseMessageContent(msgs[msgs.length - 1].text);
+          lastMsg = parsedLast.isImage
+            ? (parsedLast.caption ? "📷 " + parsedLast.caption : "📷 Imagen")
+            : parsedLast.caption;
+        }
+        const initials = getInitials(peer.name);
+        const isActive = email === activeChatEmail;
+        const unreadForPeer = getPeerUnreadCount(email);
+
+        return '<div class="chat-item ' + (isActive ? 'active' : '') + '" onclick="selectChatPeer(\'' + email + '\')">' +
+          '<div class="avatar-circle">' + escapeHtml(initials) + '</div>' +
+          '<div class="chat-item-info">' +
+            '<div class="chat-item-top">' +
+              '<strong>' + escapeHtml(peer.name) + '</strong>' +
+              formatScheduleBadge(peer.schedule) +
+            '</div>' +
+            '<div class="chat-item-sub-row">' +
+              '<span class="chat-item-sub">' + escapeHtml(lastMsg) + '</span>' +
+              (unreadForPeer > 0 ? '<span class="peer-unread-pill">' + unreadForPeer + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join("");
+    }
+
+    function selectChatPeer(email) {
+      const currentInput = document.getElementById("chat-msg-input");
+      if (currentInput && activeChatEmail) {
+        chatDrafts[activeChatEmail] = currentInput.value;
+      }
+      activeChatEmail = email;
+      editingMsgId = null;
+      editingDraftText = "";
+      confirmDeleteMsgId = null;
+      markPeerMessagesAsRead(email);
+      renderChatSidebar();
+      renderActiveChat();
+      const newInput = document.getElementById("chat-msg-input");
+      if (newInput) newInput.focus();
+    }
+
+    function toggleChatOptionsMenu(e) {
+      e.stopPropagation();
+      const menu = document.getElementById("chat-dropdown-menu");
+      if (menu) menu.classList.toggle("hidden");
+    }
+
+    /* CONFIRMACIÓN PARA VACIAR CHAT */
+    function askClearChat() {
+      const menu = document.getElementById("chat-dropdown-menu");
+      if (menu) menu.classList.add("hidden");
+      document.getElementById("clear-chat-modal").classList.remove("hidden");
+    }
+
+    function closeClearChatModal() {
+      document.getElementById("clear-chat-modal").classList.add("hidden");
+    }
+
+    async function confirmClearChat() {
+      if (!activeChatEmail) return;
+      const key = pairKey(user.email, activeChatEmail);
+      delete onlineChats[key];
+      editingMsgId = null;
+      editingDraftText = "";
+      confirmDeleteMsgId = null;
+      closeClearChatModal();
+      updateUnreadBellUI();
+      renderChatSidebar();
+      renderActiveChat();
+
+      if (!isDemoMode && db) {
+        await db.from("messages").delete().eq("chat_key", key);
+      }
+    }
+
+    /* ADJUNTAR, COMPRIMIR Y PREVISUALIZAR IMÁGENES EN EL CHAT */
+    function triggerImageUpload() {
+      const fileInp = document.getElementById("chat-img-input");
+      if (fileInp) fileInp.click();
+    }
+
+    function processImageFile(file) {
+      if (!file || !file.type || !file.type.startsWith("image/") || !activeChatEmail) return;
+      const targetEmail = activeChatEmail;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const img = new Image();
+        img.onload = function() {
+          const MAX_SIDE = 900;
+          let w = img.width;
+          let h = img.height;
+          if (w > MAX_SIDE || h > MAX_SIDE) {
+            if (w >= h) {
+              h = Math.round((h * MAX_SIDE) / w);
+              w = MAX_SIDE;
+            } else {
+              w = Math.round((w * MAX_SIDE) / h);
+              h = MAX_SIDE;
+            }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.78);
+          chatPendingImages[targetEmail] = compressedDataUrl;
+          renderPendingImagePreview();
+          const msgInp = document.getElementById("chat-msg-input");
+          if (msgInp) msgInp.focus();
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleChatImageSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = "";
+      if (file) processImageFile(file);
+    }
+
+    function handleChatPaste(e) {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type && items[i].type.startsWith("image/")) {
+          const file = items[i].getAsFile();
+          if (file) {
+            e.preventDefault();
+            processImageFile(file);
+            break;
+          }
+        }
+      }
+    }
+
+    function clearPendingImage() {
+      if (activeChatEmail) {
+        delete chatPendingImages[activeChatEmail];
+      }
+      renderPendingImagePreview();
+    }
+
+    function renderPendingImagePreview() {
+      const bar = document.getElementById("chat-img-preview-bar");
+      const thumb = document.getElementById("chat-img-preview-thumb");
+      if (!bar || !thumb) return;
+      const pending = activeChatEmail ? chatPendingImages[activeChatEmail] : "";
+      if (pending) {
+        thumb.src = pending;
+        bar.classList.remove("hidden");
+      } else {
+        thumb.src = "";
+        bar.classList.add("hidden");
+      }
+    }
+
+    function openImageLightbox(src) {
+      if (!src) return;
+      document.getElementById("lightbox-img").src = src;
+      document.getElementById("img-lightbox-modal").classList.remove("hidden");
+    }
+
+    function closeImageLightbox() {
+      document.getElementById("img-lightbox-modal").classList.add("hidden");
+      document.getElementById("lightbox-img").src = "";
+    }
+
+    /* EDITAR Y ELIMINAR MENSAJES INDIVIDUALES */
+    function startEditMessage(msgId) {
+      const key = pairKey(user.email, activeChatEmail);
+      const list = onlineChats[key] || [];
+      const target = list.find(function(m) { return String(m.id) === String(msgId); });
+      const parsed = target ? parseMessageContent(target.text) : { caption: "" };
+      editingMsgId = msgId;
+      editingDraftText = parsed.caption;
+      confirmDeleteMsgId = null;
+      renderChatMessages();
+      const inp = document.getElementById("msg-edit-field");
+      if (inp) {
+        inp.focus();
+        inp.setSelectionRange(inp.value.length, inp.value.length);
+      }
+    }
+
+    function cancelEditMessage() {
+      editingMsgId = null;
+      editingDraftText = "";
+      renderChatMessages();
+      const mainInput = document.getElementById("chat-msg-input");
+      if (mainInput) mainInput.focus();
+    }
+
+    async function saveEditMessage(msgId) {
+      const inp = document.getElementById("msg-edit-field");
+      if (!inp || !activeChatEmail) return;
+      const newCaption = inp.value.trim();
+      if (!newCaption) return;
+
+      const key = pairKey(user.email, activeChatEmail);
+      const list = onlineChats[key] || [];
+      const target = list.find(function(m) { return String(m.id) === String(msgId); });
+      let finalStoredText = newCaption;
+      if (target) {
+        const parsed = parseMessageContent(target.text);
+        finalStoredText = parsed.isImage
+          ? encodeMessageContent(parsed.imageUrl, newCaption)
+          : newCaption;
+        target.text = finalStoredText;
+        target.edited = true;
+      }
+      editingMsgId = null;
+      editingDraftText = "";
+      renderChatSidebar();
+      renderChatMessages();
+
+      const mainInput = document.getElementById("chat-msg-input");
+      if (mainInput) mainInput.focus();
+
+      if (!isDemoMode && db) {
+        await db.from("messages").update({ text: finalStoredText, edited: true }).eq("id", msgId).eq("sender_email", user.email);
+      }
+    }
+
+    function askDeleteMessage(msgId) {
+      confirmDeleteMsgId = msgId;
+      editingMsgId = null;
+      editingDraftText = "";
+      renderChatMessages();
+    }
+
+    function cancelDeleteMessage() {
+      confirmDeleteMsgId = null;
+      renderChatMessages();
+    }
+
+    async function confirmDeleteMessage(msgId) {
+      if (!activeChatEmail) return;
+      const key = pairKey(user.email, activeChatEmail);
+      if (onlineChats[key]) {
+        onlineChats[key] = onlineChats[key].filter(function(m) { return String(m.id) !== String(msgId); });
+      }
+      confirmDeleteMsgId = null;
+      updateUnreadBellUI();
+      renderChatSidebar();
+      renderChatMessages();
+
+      if (!isDemoMode && db) {
+        await db.from("messages").delete().eq("id", msgId).eq("sender_email", user.email);
+      }
+    }
+
+    function updateChatHeaderInfo() {
+      const peer = onlinePeers.find(function(p) { return p.email === activeChatEmail; });
+      if (!peer) return;
+      const m = calcMatch(user, peer);
+      const titleEl = document.getElementById("active-chat-peer-name");
+      const subEl = document.getElementById("active-chat-peer-sub");
+      if (titleEl) {
+        titleEl.innerHTML = escapeHtml(peer.name) +
+          ' <span style="font-weight:600;color:var(--primary);">(' + m.score + '%)</span> ' +
+          formatScheduleBadge(peer.schedule);
+      }
+      if (subEl) {
+        subEl.textContent = peer.major + " • " + peer.cycle;
+      }
+    }
+
+    function renderChatMessages() {
+      const msgBox = document.getElementById("chat-messages-box");
+      if (!msgBox) return;
+      const peer = onlinePeers.find(function(p) { return p.email === activeChatEmail; });
+      if (!peer) return;
+
+      const activeEditEl = document.getElementById("msg-edit-field");
+      const wasEditingFocused = activeEditEl && document.activeElement === activeEditEl;
+      const selStart = wasEditingFocused ? activeEditEl.selectionStart : null;
+      const selEnd = wasEditingFocused ? activeEditEl.selectionEnd : null;
+      if (activeEditEl) {
+        editingDraftText = activeEditEl.value;
+      }
+
+      const key = pairKey(user.email, peer.email);
+      const msgs = onlineChats[key] || [];
+
+      msgBox.innerHTML = msgs.length
+        ? msgs.map(function(msg) {
+            const isMine = msg.sender === user.email;
+            const idStr = String(msg.id);
+            const parsed = parseMessageContent(msg.text);
+            const safeImgSrc = (parsed.isImage && parsed.imageUrl.startsWith("data:image/")) ? parsed.imageUrl : "";
+
+            if (isMine && String(editingMsgId) === idStr) {
+              return '<div class="msg-bubble sent">' +
+                '<div class="msg-edit-wrap">' +
+                  '<input type="text" id="msg-edit-field" class="msg-edit-input" value="' + escapeHtml(editingDraftText) + '" oninput="editingDraftText = this.value" onkeydown="if(event.key===\'Enter\') saveEditMessage(\'' + idStr + '\'); if(event.key===\'Escape\') cancelEditMessage();" />' +
+                  '<div class="msg-edit-btns">' +
+                    '<button type="button" class="msg-act-btn" onclick="cancelEditMessage()">Cancelar</button>' +
+                    '<button type="button" class="msg-act-btn" onclick="saveEditMessage(\'' + idStr + '\')">Guardar</button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+            }
+
+            let actionsHtml = "";
+            if (isMine) {
+              if (String(confirmDeleteMsgId) === idStr) {
+                actionsHtml = '<span class="msg-actions">' +
+                  '<span>¿Borrar?</span>' +
+                  '<button type="button" class="msg-act-btn del" onclick="confirmDeleteMessage(\'' + idStr + '\')">Sí</button>' +
+                  '<button type="button" class="msg-act-btn" onclick="cancelDeleteMessage()">No</button>' +
+                '</span>';
+              } else {
+                const canEdit = !parsed.isImage || Boolean(parsed.caption);
+                actionsHtml = '<span class="msg-actions">' +
+                  (canEdit ? '<button type="button" class="msg-act-btn" onclick="startEditMessage(\'' + idStr + '\')">Editar</button>' : '') +
+                  '<button type="button" class="msg-act-btn del" onclick="askDeleteMessage(\'' + idStr + '\')">Eliminar</button>' +
+                '</span>';
+              }
+            }
+
+            let bodyHtml = "";
+            if (safeImgSrc) {
+              bodyHtml += '<img src="' + escapeHtml(safeImgSrc) + '" alt="Imagen compartida" class="chat-msg-img" onclick="openImageLightbox(this.src)" />';
+              if (parsed.caption) {
+                bodyHtml += '<div class="msg-caption">' + escapeHtml(parsed.caption) + '</div>';
+              }
+            } else {
+              bodyHtml += '<div>' + escapeHtml(parsed.caption) + '</div>';
+            }
+
+            return '<div class="msg-bubble ' + (isMine ? 'sent' : 'received') + '">' +
+              bodyHtml +
+              '<div class="msg-footer">' +
+                actionsHtml +
+                '<span>' + (msg.edited ? '(editado) ' : '') + escapeHtml(msg.time) + '</span>' +
+              '</div>' +
+            '</div>';
+          }).join("")
+        : '<div style="margin:auto;text-align:center;color:var(--text-muted);font-size:0.82rem;max-width:290px;">' +
+            'Aún no hay mensajes con <strong>' + escapeHtml(peer.name) + '</strong>. Usa el botón <strong>Saludar</strong>, escribe o envía una imagen.' +
+          '</div>';
+
+      if (wasEditingFocused) {
+        const restoredEdit = document.getElementById("msg-edit-field");
+        if (restoredEdit) {
+          restoredEdit.focus();
+          if (selStart !== null && selEnd !== null) {
+            restoredEdit.setSelectionRange(selStart, selEnd);
+          }
+        }
+      } else if (!editingMsgId) {
+        msgBox.scrollTop = msgBox.scrollHeight;
+      }
+    }
+
+    function renderActiveChat() {
+      const area = document.getElementById("chat-main-area");
+      const peer = onlinePeers.find(function(p) { return p.email === activeChatEmail; });
+      if (!peer) {
+        renderedChatPeerEmail = null;
+        area.innerHTML = '<div class="chat-empty-state"><p>Selecciona un compañero en la lista de conversaciones para abrir el chat.</p></div>';
+        return;
+      }
+
+      if (renderedChatPeerEmail === peer.email && document.getElementById("chat-msg-input")) {
+        updateChatHeaderInfo();
+        renderChatMessages();
+        renderPendingImagePreview();
+        return;
+      }
+
+      renderedChatPeerEmail = peer.email;
+      const m = calcMatch(user, peer);
+      const waGreet = "Hola " + peer.name.split(" ")[0] + ", soy " + user.name + " (" + user.cycle + " FIIS). Te escribo desde FIISTUDIO.";
+      const waLink = peer.whatsapp ? buildWaLink(peer.whatsapp, waGreet) : "";
+      const savedDraft = chatDrafts[peer.email] || "";
+
+      area.innerHTML =
+        '<div class="chat-header">' +
+          '<div class="chat-peer-title">' +
+            '<h3 id="active-chat-peer-name">' +
+              escapeHtml(peer.name) +
+              ' <span style="font-weight:600;color:var(--primary);">(' + m.score + '%)</span> ' +
+              formatScheduleBadge(peer.schedule) +
+            '</h3>' +
+            '<span class="sub-line" id="active-chat-peer-sub">' + escapeHtml(peer.major) + ' • ' + escapeHtml(peer.cycle) + '</span>' +
+          '</div>' +
+          '<div class="chat-menu-wrap">' +
+            (waLink ? '<a href="' + waLink + '" target="_blank" rel="noopener" class="btn-wa-direct" style="padding:0.36rem 0.65rem;font-size:0.78rem;">WhatsApp</a>' : '') +
+            '<button type="button" class="btn-chat-menu" onclick="toggleChatOptionsMenu(event)">Menú ▾</button>' +
+            '<div id="chat-dropdown-menu" class="chat-dropdown-menu hidden">' +
+              '<button type="button" class="menu-opt danger-opt" onclick="askClearChat()">🗑️ Vaciar chat</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<div id="chat-messages-box" class="chat-messages"></div>' +
+
+        '<div id="chat-img-preview-bar" class="chat-img-preview-bar hidden">' +
+          '<div class="chat-img-preview-left">' +
+            '<img id="chat-img-preview-thumb" class="chat-img-preview-thumb" src="" alt="Vista previa" />' +
+            '<div class="chat-img-preview-text">Imagen lista para enviar<span>Puedes añadir un comentario o presionar Enviar</span></div>' +
+          '</div>' +
+          '<button type="button" class="btn-remove-preview" onclick="clearPendingImage()" title="Quitar imagen">×</button>' +
+        '</div>' +
+
+        '<div class="chat-quick-bar">' +
+          '<button type="button" class="quick-chip" onclick="sendGreeting()">👋 Saludar</button>' +
+        '</div>' +
+
+        '<div class="chat-input-bar">' +
+          '<input type="file" id="chat-img-input" accept="image/*" class="hidden" onchange="handleChatImageSelect(event)" />' +
+          '<button type="button" class="btn-attach-img" onclick="triggerImageUpload()" title="Enviar imagen">📷</button>' +
+          '<input type="text" id="chat-msg-input" value="' + escapeHtml(savedDraft) + '" placeholder="Escribe o pega una imagen para ' + escapeHtml(peer.name.split(" ")[0]) + '..." oninput="saveChatDraft(this.value)" onpaste="handleChatPaste(event)" onkeydown="if(event.key===\'Enter\') sendChatMessage()" />' +
+          '<button type="button" class="btn-connect" style="padding:0.5rem 0.85rem;font-size:0.82rem;" onclick="sendChatMessage()">Enviar</button>' +
+        '</div>';
+
+      renderChatMessages();
+      renderPendingImagePreview();
+    }
+
+    function sendGreeting() {
+      if (!activeChatEmail) return;
+      const peer = onlinePeers.find(function(p) { return p.email === activeChatEmail; });
+      if (!peer) return;
+      const input = document.getElementById("chat-msg-input");
+      if (input) {
+        input.value = "¡Hola " + peer.name.split(" ")[0] + "! 👋";
+        sendChatMessage();
+      }
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById("chat-msg-input");
+      if (!input || !activeChatEmail) return;
+      const text = input.value.trim();
+      const pendingImg = chatPendingImages[activeChatEmail] || "";
+
+      if (!text && !pendingImg) {
+        input.focus();
+        return;
+      }
+
+      const peer = onlinePeers.find(function(p) { return p.email === activeChatEmail; });
+      if (!peer) return;
+
+      const payloadText = encodeMessageContent(pendingImg, text);
+      const key = pairKey(user.email, peer.email);
+
+      input.value = "";
+      chatDrafts[peer.email] = "";
+      delete chatPendingImages[peer.email];
+      renderPendingImagePreview();
+
+      editingMsgId = null;
+      editingDraftText = "";
+      confirmDeleteMsgId = null;
+      input.focus();
+
+      if (isDemoMode) {
+        if (!onlineChats[key]) onlineChats[key] = [];
+        onlineChats[key].push({ id: uid(), sender: user.email, text: payloadText, time: formatMsgTime(new Date()), edited: false });
+        renderChatSidebar();
+        renderChatMessages();
+        input.focus();
+        return;
+      }
+
+      if (db) {
+        const { data } = await db.from("messages").insert({
+          chat_key: key,
+          sender_email: user.email,
+          text: payloadText,
+          edited: false
+        }).select().single();
+
+        if (data) {
+          knownMessageIds.add(String(data.id));
+          if (!onlineChats[key]) onlineChats[key] = [];
+          if (!onlineChats[key].some(function(m) { return String(m.id) === String(data.id); })) {
+            onlineChats[key].push({
+              id: data.id,
+              sender: data.sender_email,
+              text: data.text,
+              time: formatMsgTime(data.created_at),
+              edited: false
+            });
+          }
+          renderChatSidebar();
+          renderChatMessages();
+        }
+      }
+    }
+
+    document.addEventListener("visibilitychange", function() {
+      if (document.visibilityState === "visible" && isChatDrawerOpen() && activeChatEmail) {
+        markPeerMessagesAsRead(activeChatEmail);
+        renderChatSidebar();
+      }
+    });
+
+    document.addEventListener("click", function(e) {
+      const wrap = document.getElementById("course-search-wrap");
+      if (wrap && !wrap.contains(e.target)) {
+        document.getElementById("course-dropdown").classList.add("hidden");
+      }
+      const chatMenu = document.getElementById("chat-dropdown-menu");
+      if (chatMenu && !e.target.closest(".chat-menu-wrap")) {
+        chatMenu.classList.add("hidden");
+      }
+    });
+
+    setupMobilePwa();
+    applyTheme(store.get("fiis_theme") || "light");
+
+    // Restaurar sesión activa en Supabase si ya estaba iniciada
+    (async function initSession() {
+      if (!db) return;
+      const { data } = await db.auth.getSession();
+      if (data && data.session && data.session.user && data.session.user.email) {
+        const profile = await fetchOrCreateProfile(data.session.user.email);
+        await openDashboard(profile, false);
+      }
+    })();
+  </script>
+</body>
+</html>
